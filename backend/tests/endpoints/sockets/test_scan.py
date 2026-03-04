@@ -1,9 +1,10 @@
-from unittest.mock import Mock
+import asyncio
+from unittest.mock import Mock, patch
 
 import pytest
 import socketio
 
-from endpoints.sockets.scan import ScanStats, _should_scan_rom
+from endpoints.sockets.scan import ScanStats, _run_bounded_tasks, _should_scan_rom
 from handler.scan_handler import ScanType
 from models.rom import Rom
 
@@ -70,6 +71,43 @@ async def test_merging_scan_stats():
     assert stats.identified_roms == 21
     assert stats.scanned_firmware == 23
     assert stats.new_firmware == 25
+
+
+@pytest.mark.asyncio
+async def test_run_bounded_tasks_limits_concurrency_and_logs_errors():
+    running = 0
+    max_running = 0
+    lock = asyncio.Lock()
+
+    async def _job(i: int):
+        nonlocal running, max_running
+        async with lock:
+            running += 1
+            if running > max_running:
+                max_running = running
+
+        await asyncio.sleep(0.01)
+
+        async with lock:
+            running -= 1
+
+        if i == 2:
+            raise RuntimeError("boom")
+
+    coroutines = [_job(i) for i in range(6)]
+
+    with patch("endpoints.sockets.scan.log.error") as mock_log_error:
+        await _run_bounded_tasks(coroutines, concurrency=2, error_prefix="prefix")
+
+    assert max_running <= 2
+    mock_log_error.assert_called_once()
+    assert "prefix" in mock_log_error.call_args[0][0]
+    assert "boom" in mock_log_error.call_args[0][0]
+
+
+@pytest.mark.asyncio
+async def test_run_bounded_tasks_handles_empty_list():
+    await _run_bounded_tasks([], concurrency=2, error_prefix="prefix")
 
 
 class TestShouldScanRom:

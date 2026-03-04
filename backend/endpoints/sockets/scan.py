@@ -3,14 +3,21 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass
 from itertools import batched
-from typing import Any, Final
+from typing import Any, Coroutine, Final
 
 import pydash
 import socketio  # type: ignore
 from rq import Worker
 from rq.job import Job
 
-from config import DEV_MODE, REDIS_URL, SCAN_TIMEOUT, SCAN_WORKERS, TASK_RESULT_TTL
+from config import (
+    ASSET_WORKERS,
+    DEV_MODE,
+    REDIS_URL,
+    SCAN_TIMEOUT,
+    SCAN_WORKERS,
+    TASK_RESULT_TTL,
+)
 from config.config_manager import config_manager as cm
 from endpoints.responses import TaskType
 from endpoints.responses.platform import PlatformSchema
@@ -109,6 +116,31 @@ class ScanStats:
 def _get_socket_manager() -> socketio.AsyncRedisManager:
     """Connect to external socketio server"""
     return socketio.AsyncRedisManager(REDIS_URL, write_only=True)
+
+
+async def _run_bounded_tasks(
+    coroutines: list[Coroutine[Any, Any, Any]],
+    concurrency: int,
+    error_prefix: str,
+) -> None:
+    """Run coroutines with bounded concurrency and log unexpected exceptions."""
+    if not coroutines:
+        return
+
+    semaphore = asyncio.Semaphore(max(1, concurrency))
+
+    async def _run_one(coro: Coroutine[Any, Any, Any]) -> Any:
+        async with semaphore:
+            return await coro
+
+    results = await asyncio.gather(
+        *(_run_one(coro) for coro in coroutines),
+        return_exceptions=True,
+    )
+
+    for result in results:
+        if isinstance(result, Exception):
+            log.error(f"{error_prefix}: {result}")
 
 
 async def _identify_firmware(
@@ -419,24 +451,32 @@ async def _identify_rom(
                     },
                 )
 
+                media_coroutines: list[Coroutine[Any, Any, Any]] = []
+
                 # Handle special media files from Screenscraper
                 if _added_rom.ss_metadata:
                     preferred_media_types = get_preferred_media_types()
                     for media_type in preferred_media_types:
-                        if _added_rom.ss_metadata.get(f"{media_type.value}_path"):
-                            await fs_resource_handler.store_media_file(
-                                _added_rom.ss_metadata[f"{media_type.value}_url"],
-                                _added_rom.ss_metadata[f"{media_type.value}_path"],
+                        media_path = _added_rom.ss_metadata.get(f"{media_type.value}_path")
+                        media_url = _added_rom.ss_metadata.get(f"{media_type.value}_url")
+                        if media_path and media_url:
+                            media_coroutines.append(
+                                fs_resource_handler.store_media_file(media_url, media_path)
                             )
 
                 # Handle special media files from ES-DE gamelist.xml
                 if _added_rom.gamelist_metadata:
                     preferred_media_types = get_preferred_media_types()
                     for media_type in preferred_media_types:
-                        if _added_rom.gamelist_metadata.get(f"{media_type.value}_path"):
-                            await fs_resource_handler.store_media_file(
-                                _added_rom.gamelist_metadata[f"{media_type.value}_url"],
-                                _added_rom.gamelist_metadata[f"{media_type.value}_path"],
+                        media_path = _added_rom.gamelist_metadata.get(
+                            f"{media_type.value}_path"
+                        )
+                        media_url = _added_rom.gamelist_metadata.get(
+                            f"{media_type.value}_url"
+                        )
+                        if media_path and media_url:
+                            media_coroutines.append(
+                                fs_resource_handler.store_media_file(media_url, media_path)
                             )
 
                 # Store normal and locked badges
@@ -445,15 +485,25 @@ async def _identify_rom(
                         badge_url_lock = ach.get("badge_url_lock", None)
                         badge_path_lock = ach.get("badge_path_lock", None)
                         if badge_url_lock and badge_path_lock:
-                            await fs_resource_handler.store_ra_badge(
-                                badge_url_lock, badge_path_lock
+                            media_coroutines.append(
+                                fs_resource_handler.store_ra_badge(
+                                    badge_url_lock, badge_path_lock
+                                )
                             )
                         badge_url = ach.get("badge_url", None)
                         badge_path = ach.get("badge_path", None)
                         if badge_url and badge_path:
-                            await fs_resource_handler.store_ra_badge(
-                                badge_url, badge_path
+                            media_coroutines.append(
+                                fs_resource_handler.store_ra_badge(
+                                    badge_url, badge_path
+                                )
                             )
+
+                await _run_bounded_tasks(
+                    media_coroutines,
+                    concurrency=ASSET_WORKERS,
+                    error_prefix=f"Error processing extra media for ROM {_added_rom.fs_name}",
+                )
 
                 refreshed_rom = db_rom_handler.get_rom(_added_rom.id)
                 if refreshed_rom:
@@ -562,7 +612,7 @@ async def _identify_platform(
     # Create semaphore to limit concurrent ROM scanning
     scan_semaphore = asyncio.Semaphore(SCAN_WORKERS)
     # Process media downloads in parallel with ROM identification
-    asset_semaphore = asyncio.Semaphore(SCAN_WORKERS)
+    asset_semaphore = asyncio.Semaphore(ASSET_WORKERS)
     asset_tasks: list[asyncio.Task[None]] = []
 
     async def scan_rom_with_semaphore(fs_rom: FSRom, rom: Rom | None) -> None:

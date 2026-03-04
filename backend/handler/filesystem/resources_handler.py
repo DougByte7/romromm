@@ -1,3 +1,4 @@
+import asyncio
 import gzip
 import os
 from io import BytesIO
@@ -7,7 +8,11 @@ import httpx
 from fastapi import status
 from PIL import Image, ImageFile, UnidentifiedImageError
 
-from config import ENABLE_SCHEDULED_CONVERT_IMAGES_TO_WEBP, RESOURCES_BASE_PATH
+from config import (
+    ASSET_WORKERS,
+    ENABLE_SCHEDULED_CONVERT_IMAGES_TO_WEBP,
+    RESOURCES_BASE_PATH,
+)
 from config.config_manager import MetadataMediaType
 from logger.logger import log
 from models.collection import Collection
@@ -162,12 +167,28 @@ class FSResourcesHandler(FSHandler):
         if not entity:
             return None, None
 
-        # Download covers if URL provided and (overwriting or covers don't exist)
-        if url_cover:
-            if overwrite or not self.cover_exists(entity, CoverSize.SMALL):
-                await self._store_cover(entity, url_cover, CoverSize.SMALL)
-            if overwrite or not self.cover_exists(entity, CoverSize.BIG):
-                await self._store_cover(entity, url_cover, CoverSize.BIG)
+        # Download cover once as BIG and generate SMALL locally to reduce network overhead.
+        if url_cover and (overwrite or not self.cover_exists(entity, CoverSize.BIG)):
+            await self._store_cover(entity, url_cover, CoverSize.BIG)
+
+        # Ensure small cover exists using the already downloaded big cover.
+        if overwrite or not self.cover_exists(entity, CoverSize.SMALL):
+            big_path_rel = self._get_cover_path(entity, CoverSize.BIG)
+            if big_path_rel:
+                try:
+                    big_path = self.validate_path(big_path_rel)
+                    small_path = self.validate_path(
+                        f"{entity.fs_resources_path}/cover/{CoverSize.SMALL.value}.png"
+                    )
+                    with Image.open(big_path) as img:
+                        self.resize_cover_to_small(img, save_path=str(small_path))
+
+                    if ENABLE_SCHEDULED_CONVERT_IMAGES_TO_WEBP:
+                        self.image_converter.convert_to_webp(small_path, force=True)
+                except UnidentifiedImageError as exc:
+                    log.error(
+                        f"Unable to identify image for small cover {entity.fs_resources_path}: {str(exc)}"
+                    )
 
         # Return paths for existing covers
         path_cover_s = (
@@ -326,13 +347,19 @@ class FSResourcesHandler(FSHandler):
         if not url_screenshots or (not overwrite and self.screenshots_exist(rom)):
             return rom.path_screenshots or []
 
-        # Download and store new screenshots
-        path_screenshots: list[str] = []
-        for idx, url_screenshot in enumerate(url_screenshots):
-            await self._store_screenshot(rom, url_screenshot, idx)
-            path_screenshots.append(self._get_screenshot_path(rom, str(idx)))
+        # Download and store new screenshots in parallel with bounded concurrency.
+        semaphore = asyncio.Semaphore(ASSET_WORKERS)
 
-        return path_screenshots
+        async def _store(idx: int, url_screenshot: str) -> str:
+            async with semaphore:
+                await self._store_screenshot(rom, url_screenshot, idx)
+                return self._get_screenshot_path(rom, str(idx))
+
+        path_screenshots = await asyncio.gather(
+            *(_store(idx, url_screenshot) for idx, url_screenshot in enumerate(url_screenshots))
+        )
+
+        return list(path_screenshots)
 
     # Manuals
     def manual_exists(self, rom: Rom) -> bool:

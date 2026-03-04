@@ -1,10 +1,11 @@
+import asyncio
 import os
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
 
-from config import RESOURCES_BASE_PATH
+from config import ASSET_WORKERS, RESOURCES_BASE_PATH
 from handler.filesystem.base_handler import CoverSize
 from handler.filesystem.resources_handler import FSResourcesHandler
 from models.collection import Collection
@@ -161,10 +162,8 @@ class TestFSResourcesHandler:
 
                 await handler.get_cover(rom, False, url)
 
-                # Should call _store_cover for both sizes since covers don't exist
-                assert mock_store.call_count == 2
-                mock_store.assert_any_call(rom, url, CoverSize.SMALL)
-                mock_store.assert_any_call(rom, url, CoverSize.BIG)
+                # Should call _store_cover only once (BIG) and derive SMALL locally
+                mock_store.assert_called_once_with(rom, url, CoverSize.BIG)
 
     @pytest.mark.asyncio
     async def test_get_cover_with_overwrite(
@@ -176,10 +175,33 @@ class TestFSResourcesHandler:
         with patch.object(handler, "_store_cover") as mock_store:
             await handler.get_cover(rom, True, url)
 
-            # Should call _store_cover for both sizes regardless of existence
-            assert mock_store.call_count == 2
-            mock_store.assert_any_call(rom, url, CoverSize.SMALL)
-            mock_store.assert_any_call(rom, url, CoverSize.BIG)
+            # Should call _store_cover only once (BIG) and derive SMALL locally
+            mock_store.assert_called_once_with(rom, url, CoverSize.BIG)
+
+    @pytest.mark.asyncio
+    async def test_get_cover_generates_small_from_existing_big(
+        self, handler: FSResourcesHandler, rom: Rom
+    ):
+        """Generate small cover from existing big cover when small is missing."""
+        with patch.object(handler, "cover_exists") as mock_exists, patch.object(
+            handler, "_get_cover_path"
+        ) as mock_get_cover_path, patch.object(handler, "validate_path") as mock_validate, patch(
+            "handler.filesystem.resources_handler.Image.open"
+        ) as mock_image_open, patch.object(
+            handler, "resize_cover_to_small"
+        ) as mock_resize:
+            mock_exists.side_effect = lambda _entity, size: size == CoverSize.BIG
+            mock_get_cover_path.side_effect = (
+                lambda _entity, size: "roms/1/1/cover/big.png"
+                if size == CoverSize.BIG
+                else "roms/1/1/cover/small.png"
+            )
+            mock_validate.side_effect = lambda x: Path(x)
+
+            await handler.get_cover(rom, False, None)
+
+            mock_image_open.assert_called_once()
+            mock_resize.assert_called_once()
 
     async def test_remove_cover_no_entity(self, handler: FSResourcesHandler):
         """Test remove_cover with no entity"""
@@ -288,6 +310,20 @@ class TestFSResourcesHandler:
                 f"{rom.fs_resources_path}/screenshots/1.jpg",
             ]
             assert result == expected_paths
+
+    @pytest.mark.asyncio
+    async def test_get_rom_screenshots_uses_asset_workers_semaphore(
+        self, handler: FSResourcesHandler, rom: Rom
+    ):
+        urls = ["http://example.com/screenshot1.jpg"]
+
+        with patch(
+            "handler.filesystem.resources_handler.asyncio.Semaphore",
+            wraps=asyncio.Semaphore,
+        ) as mock_semaphore, patch.object(handler, "_store_screenshot"):
+            await handler.get_rom_screenshots(rom, True, urls)
+
+            mock_semaphore.assert_called_once_with(ASSET_WORKERS)
 
     def test_manual_exists_no_manual(self, handler: FSResourcesHandler, rom: Rom):
         """Test manual_exists when no manual exists"""
