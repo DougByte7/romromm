@@ -75,7 +75,7 @@ sentry_sdk.init(
 )
 
 app = FastAPI(
-    title="RomM API",
+    title="Romromm API",
     version=get_version(),
     lifespan=lifespan,
     docs_url="/api/docs",
@@ -157,3 +157,4 @@ if __name__ == "__main__":
 
     # Run application
     uvicorn.run("main:app", host=DEV_HOST, port=DEV_PORT, reload=True, access_log=False)
+

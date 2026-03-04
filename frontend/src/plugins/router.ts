@@ -106,7 +106,7 @@ const routes = [
     path: "/",
     name: ROUTES.MAIN,
     meta: {
-      title: "RomM",
+      title: "Romromm",
     },
     component: () => import("@/layouts/Main.vue"),
     children: [
@@ -380,12 +380,12 @@ router.beforeEach(async (to, _from, next) => {
     if (to.meta.title) {
       document.title = i18n.global.t(to.meta.title as string);
     } else {
-      document.title = "RomM";
+      document.title = "Romromm";
     }
     next();
   } catch (error) {
     console.error("Navigation guard error:", error);
-    document.title = "RomM";
+    document.title = "Romromm";
     next({ name: ROUTES.LOGIN });
   }
 });
@@ -396,3 +396,4 @@ router.beforeResolve(async () => {
 });
 
 export default router;
+

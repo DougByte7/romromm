@@ -1,15 +1,15 @@
 # Please see the full example under examples/docker-compose.example.yml
 
 services:
-  romm-dev:
+  romromm-dev:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: romm-dev
+    container_name: romromm-dev
     env_file: .env
     environment:
-      - REDIS_HOST=romm-valkey-dev
-      - DB_HOST=${DB_HOST:-romm-db-dev}
+      - REDIS_HOST=romromm-valkey-dev
+      - DB_HOST=${DB_HOST:-romromm-db-dev}
       - ROMM_BASE_PATH=/app/romm
     ports:
       - "3000:3000" # Vite dev server (custom)
@@ -25,60 +25,60 @@ services:
       - ./romm_mock:/app/romm
       - ~/.vite-plugin-mkcert:/app/.vite-plugin-mkcert
     depends_on:
-      - romm-db-dev
-      - romm-valkey-dev
-      - romm-postgres-dev
+      - romromm-db-dev
+      - romromm-valkey-dev
+      - romromm-postgres-dev
     command: /bin/bash -c "cd /app && bash"
     stdin_open: true
     tty: true
 
-  romm-db-dev:
+  romromm-db-dev:
     image: mariadb:11.3.2
-    container_name: romm-db-dev
+    container_name: romromm-db-dev
     restart: unless-stopped
     env_file: .env
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWD:-rootpassword}
-      - MARIADB_DATABASE=${DB_NAME:-romm}
-      - MARIADB_USER=${DB_USER:-romm}
-      - MARIADB_PASSWORD=${DB_PASSWD:-romm}
+      - MARIADB_DATABASE=${DB_NAME:-romromm}
+      - MARIADB_USER=${DB_USER:-romromm}
+      - MARIADB_PASSWORD=${DB_PASSWD:-romromm}
     volumes:
-      - romm-db-dev:/var/lib/mysql
+      - romromm-db-dev:/var/lib/mysql
     ports:
       - "3306:3306"
 
-  romm-valkey-dev:
+  romromm-valkey-dev:
     image: valkey/valkey:8
-    container_name: romm-valkey-dev
+    container_name: romromm-valkey-dev
     restart: unless-stopped
     env_file: .env
     ports:
       - "${REDIS_PORT:-6379}:6379"
 
-  romm-postgres-dev:
+  romromm-postgres-dev:
     image: postgres:16-alpine
-    container_name: romm-postgresql-dev
+    container_name: romromm-postgresql-dev
     restart: unless-stopped
     env_file: .env
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-authentik}
-      POSTGRES_USER: ${POSTGRES_USER:-romm}
+      POSTGRES_USER: ${POSTGRES_USER:-romromm}
       POSTGRES_DB: ${POSTGRES_DB:-authentik}
     volumes:
       - postgres-db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  romm-authentik-server:
+  romromm-authentik-server:
     image: ghcr.io/goauthentik/server:2024.10.4
-    container_name: romm-authentik-server
+    container_name: romromm-authentik-server
     restart: unless-stopped
     command: server
     env_file: .env
     environment:
-      AUTHENTIK_REDIS__HOST: romm-valkey-dev
-      AUTHENTIK_POSTGRESQL__HOST: romm-postgres-dev
-      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-romm}
+      AUTHENTIK_REDIS__HOST: romromm-valkey-dev
+      AUTHENTIK_POSTGRESQL__HOST: romromm-postgres-dev
+      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-romromm}
       AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:-secret-key-default}
@@ -90,19 +90,19 @@ services:
       - "9001:9000"
       - "9444:9443"
     depends_on:
-      - romm-postgres-dev
-      - romm-valkey-dev
+      - romromm-postgres-dev
+      - romromm-valkey-dev
 
-  romm-authentik-worker:
+  romromm-authentik-worker:
     image: ghcr.io/goauthentik/server:2024.10.4
-    container_name: romm-authentik-worker
+    container_name: romromm-authentik-worker
     restart: unless-stopped
     command: worker
     env_file: .env
     environment:
-      AUTHENTIK_REDIS__HOST: romm-valkey-dev
-      AUTHENTIK_POSTGRESQL__HOST: romm-postgres-dev
-      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-romm}
+      AUTHENTIK_REDIS__HOST: romromm-valkey-dev
+      AUTHENTIK_POSTGRESQL__HOST: romromm-postgres-dev
+      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-romromm}
       AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:-secret-key-default}
@@ -111,11 +111,12 @@ services:
       - authentik-media:/media
       - authentik-templates:/templates
     depends_on:
-      - romm-postgres-dev
-      - romm-valkey-dev
+      - romromm-postgres-dev
+      - romromm-valkey-dev
 
 volumes:
-  romm-db-dev:
+  romromm-db-dev:
   postgres-db:
   authentik-media:
   authentik-templates:
+
