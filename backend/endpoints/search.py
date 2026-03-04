@@ -192,8 +192,11 @@ async def search_rom(
                     **merged_dict.get(normalized_name, {}),
                 }
 
+    sgdb_semaphore = asyncio.Semaphore(10)
+
     async def get_sgdb_rom(name: str) -> tuple[str, SGDBRom]:
-        return name, await meta_sgdb_handler.get_details_by_names([name])
+        async with sgdb_semaphore:
+            return name, await meta_sgdb_handler.get_details_by_names([name])
 
     sgdb_roms = await asyncio.gather(
         *[get_sgdb_rom(name) for name in list(merged_dict.keys())]
@@ -237,3 +240,4 @@ async def search_cover(
         ) from err
 
     return [SearchCoverSchema.model_validate(cover) for cover in covers]
+

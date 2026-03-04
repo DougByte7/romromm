@@ -10,7 +10,7 @@ from logger.logger import log
 def begin_session(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if hasattr(kwargs, "session"):
+        if kwargs.get("session") is not None:
             return func(*args, **kwargs)
 
         try:
@@ -24,3 +24,4 @@ def begin_session(func):
             ) from exc
 
     return wrapper
+

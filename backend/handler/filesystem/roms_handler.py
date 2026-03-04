@@ -103,6 +103,7 @@ NON_HASHABLE_PLATFORMS = frozenset(
 )
 
 FILE_READ_CHUNK_SIZE = 1024 * 8
+MIME_DETECTOR = magic.Magic(mime=True)
 
 
 class FSRom(TypedDict):
@@ -123,8 +124,7 @@ class FileHash(TypedDict):
 
 
 def is_compressed_file(file_path: str) -> bool:
-    mime = magic.Magic(mime=True)
-    file_type = mime.from_file(file_path)
+    file_type = MIME_DETECTOR.from_file(file_path)
 
     return file_type in COMPRESSED_MIME_TYPES or file_path.endswith(
         tuple(COMPRESSED_FILE_EXTENSIONS)
@@ -727,3 +727,4 @@ class FSRomsHandler(FSHandler):
             await self.move_file_or_folder(
                 f"{fs_path}/{old_name}", f"{fs_path}/{new_name}"
             )
+

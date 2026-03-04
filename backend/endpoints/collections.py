@@ -169,7 +169,6 @@ def get_collections(
     """
 
     collections = db_collection_handler.get_collections(updated_after=updated_after)
-
     return CollectionSchema.for_user(request.user.id, collections)
 
 
@@ -177,25 +176,9 @@ def get_collections(
 def get_collection_identifiers(
     request: Request,
 ) -> list[int]:
-    """Get collections identifiers endpoint
+    """Get collections identifiers endpoint."""
 
-    Args:
-        request (Request): Fastapi Request object
-
-    Returns:
-        list[int]: List of collection IDs
-    """
-
-    collections = db_collection_handler.get_collections(
-        only_fields=[
-            Collection.id,
-            Collection.name,
-            Collection.user_id,
-            Collection.is_public,
-        ],
-    )
-
-    return [c.id for c in collections if c.user_id == request.user.id or c.is_public]
+    return db_collection_handler.get_collection_ids_for_user(request.user.id)
 
 
 @protected_route(router.get, "/virtual", [Scope.COLLECTIONS_READ])
@@ -540,3 +523,4 @@ async def delete_smart_collection(
 
     log.info(f"Deleting {hl(smart_collection.name, color=BLUE)} from database")
     db_collection_handler.delete_smart_collection(id)
+

@@ -1,5 +1,6 @@
 from endpoints.responses.stats import StatsReturn
 from handler.database import db_stats_handler
+from handler.database.base_handler import sync_session
 from utils.router import APIRouter
 
 router = APIRouter(
@@ -16,11 +17,13 @@ def stats() -> StatsReturn:
         dict: Dictionary with all the stats
     """
 
-    return {
-        "PLATFORMS": db_stats_handler.get_platforms_count(),
-        "ROMS": db_stats_handler.get_roms_count(),
-        "SAVES": db_stats_handler.get_saves_count(),
-        "STATES": db_stats_handler.get_states_count(),
-        "SCREENSHOTS": db_stats_handler.get_screenshots_count(),
-        "TOTAL_FILESIZE_BYTES": db_stats_handler.get_total_filesize(),
-    }
+    with sync_session.begin() as session:
+        return {
+            "PLATFORMS": db_stats_handler.get_platforms_count(session=session),
+            "ROMS": db_stats_handler.get_roms_count(session=session),
+            "SAVES": db_stats_handler.get_saves_count(session=session),
+            "STATES": db_stats_handler.get_states_count(session=session),
+            "SCREENSHOTS": db_stats_handler.get_screenshots_count(session=session),
+            "TOTAL_FILESIZE_BYTES": db_stats_handler.get_total_filesize(session=session),
+        }
+

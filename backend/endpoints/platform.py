@@ -16,7 +16,6 @@ from handler.scan_handler import scan_platform
 from logger.formatter import BLUE
 from logger.formatter import highlight as hl
 from logger.logger import log
-from models.platform import Platform
 from utils.platforms import get_supported_platforms
 from utils.router import APIRouter
 
@@ -73,10 +72,7 @@ def get_platform_identifiers(
 ) -> list[int]:
     """Retrieve platform identifiers."""
 
-    platforms = db_platform_handler.get_platforms(
-        only_fields=[Platform.id],
-    )
-    return [p.id for p in platforms]
+    return db_platform_handler.get_platform_ids()
 
 
 @protected_route(router.get, "/supported", [Scope.PLATFORMS_READ])
@@ -153,3 +149,4 @@ async def delete_platform(
         f"Deleting {hl(platform.name, color=BLUE)} [{hl(platform.fs_slug)}] from database"
     )
     db_platform_handler.delete_platform(id)
+

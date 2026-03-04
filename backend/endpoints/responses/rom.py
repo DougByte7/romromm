@@ -406,30 +406,33 @@ class DetailedRomSchema(RomSchema):
             user_id, db_rom.collections
         )
 
-        # Load notes separately using the database handler to avoid lazy loading issues
-        from handler.database import db_rom_handler
+        # Notes are preloaded with `with_details`; avoid issuing an extra query per ROM
+        notes = [
+            note
+            for note in db_rom.notes
+            if note.is_public or note.user_id == user_id
+        ]
 
-        notes = db_rom_handler.get_rom_notes(rom_id=db_rom.id, user_id=user_id)
-
-        # Convert notes to schema format
-        all_notes = []
-        for note in notes:
-            note_dict = {
-                "id": note.id,
-                "title": note.title,
-                "content": note.content,
-                "is_public": note.is_public,
-                "tags": note.tags,
-                "created_at": note.created_at,
-                "updated_at": note.updated_at,
-                "user_id": note.user_id,
-                "username": note.user.username,
-            }
-            all_notes.append(UserNoteSchema.model_validate(note_dict))
-
-        # Sort notes by updated_at (most recent first)
-        all_notes.sort(key=lambda x: x.updated_at, reverse=True)
-        db_rom.all_user_notes = all_notes  # type: ignore
+        db_rom.all_user_notes = sorted(  # type: ignore
+            [
+                UserNoteSchema.model_validate(
+                    {
+                        "id": note.id,
+                        "title": note.title,
+                        "content": note.content,
+                        "is_public": note.is_public,
+                        "tags": note.tags,
+                        "created_at": note.created_at,
+                        "updated_at": note.updated_at,
+                        "user_id": note.user_id,
+                        "username": note.user.username,
+                    }
+                )
+                for note in notes
+            ],
+            key=lambda x: x.updated_at,
+            reverse=True,
+        )
 
         return cls.model_validate(db_rom)
 
@@ -457,3 +460,4 @@ class RomFiltersDict(TypedDict):
     regions: list[str]
     languages: list[str]
     platforms: list[int]
+

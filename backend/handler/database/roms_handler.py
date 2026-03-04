@@ -37,6 +37,7 @@ from config import ROMM_DB_DRIVER
 from decorators.database import begin_session
 from handler.metadata.base_handler import UniversalPlatformSlug as UPS
 from models.assets import Save, Screenshot, State
+from models.collection import Collection, CollectionRom
 from models.platform import Platform
 from models.rom import Rom, RomFile, RomMetadata, RomNote, RomUser
 from utils.database import (
@@ -197,14 +198,13 @@ class DBRomsHandler(DBBaseHandler):
 
     def _filter_by_collection_id(
         self, query: Query, session: Session, collection_id: int
-    ):
-        from . import db_collection_handler
-
-        collection = db_collection_handler.get_collection(collection_id)
-
-        if collection:
-            return query.filter(Rom.id.in_(collection.rom_ids))
-        return query
+    ) -> Query:
+        rom_ids_subquery = (
+            select(CollectionRom.rom_id)
+            .where(CollectionRom.collection_id == collection_id)
+            .scalar_subquery()
+        )
+        return query.filter(Rom.id.in_(rom_ids_subquery))
 
     def _filter_by_virtual_collection_id(
         self, query: Query, session: Session, virtual_collection_id: str
@@ -221,18 +221,21 @@ class DBRomsHandler(DBBaseHandler):
 
     def _filter_by_smart_collection_id(
         self, query: Query, session: Session, smart_collection_id: int, user_id: int
-    ):
+    ) -> Query:
         from . import db_collection_handler
 
         smart_collection = db_collection_handler.get_smart_collection(
             smart_collection_id
         )
 
-        if smart_collection:
-            # Ensure the latest ROMs are loaded
-            smart_collection = smart_collection.update_properties(user_id)
-            return query.filter(Rom.id.in_(smart_collection.rom_ids))
-        return query
+        if not smart_collection:
+            return query.filter(false())
+
+        rom_ids = list(smart_collection.rom_ids or [])
+        if not rom_ids:
+            return query.filter(false())
+
+        return query.filter(Rom.id.in_(rom_ids))
 
     def _filter_by_search_term(self, query: Query, search_term: str):
         terms = [term.strip() for term in search_term.split("|")]
@@ -275,20 +278,23 @@ class DBRomsHandler(DBBaseHandler):
         if not user_id:
             return query
 
-        from . import db_collection_handler
+        favorite_collection_id_subquery = (
+            select(Collection.id)
+            .where(Collection.user_id == user_id, Collection.is_favorite.is_(True))
+            .limit(1)
+            .scalar_subquery()
+        )
+        favorite_rom_ids_subquery = (
+            select(CollectionRom.rom_id)
+            .where(CollectionRom.collection_id == favorite_collection_id_subquery)
+            .scalar_subquery()
+        )
 
-        favorites_collection = db_collection_handler.get_favorite_collection(user_id)
-        if favorites_collection:
-            predicate = Rom.id.in_(favorites_collection.rom_ids)
-            if not value:
-                predicate = not_(predicate)
-            return query.filter(predicate)
-
-        # If no favorites collection exists, return the original query if non-favorites
-        # were requested, or an empty query if favorites were requested.
+        predicate = Rom.id.in_(favorite_rom_ids_subquery)
         if not value:
-            return query
-        return query.filter(false())
+            predicate = not_(predicate)
+
+        return query.filter(predicate)
 
     def _filter_by_duplicate(self, query: Query, value: bool) -> Query:
         """Filter based on whether the rom has duplicates."""
@@ -1406,3 +1412,4 @@ class DBRomsHandler(DBBaseHandler):
         )
 
         return self._collect_filter_values(session, statement)
+

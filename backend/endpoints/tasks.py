@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import TypedDict
 
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Query, Request
 from rq import Worker
 from rq.job import Job, JobStatus
 from rq.registry import FailedJobRegistry, FinishedJobRegistry
@@ -224,13 +224,13 @@ async def list_tasks(request: Request) -> GroupedTasksDict:
 
 
 @protected_route(router.get, "/status", [Scope.TASKS_RUN])
-async def get_tasks_status(request: Request) -> list[TaskStatusResponse]:
-    """Get all active, queued, completed, and failed tasks.
+async def get_tasks_status(
+    request: Request,
+    limit: int = Query(200, ge=1, le=5000),
+) -> list[TaskStatusResponse]:
+    """Get active, queued, completed and failed tasks.
 
-    Args:
-        request (Request): FastAPI Request object
-    Returns:
-        list[TaskStatusResponse]: List of all tasks with their current status
+    To keep latency predictable, finished/failed registry fetches are capped by `limit`.
     """
     all_tasks: list[TaskStatusResponse] = []
 
@@ -241,7 +241,7 @@ async def get_tasks_status(request: Request) -> list[TaskStatusResponse]:
         if current_job:
             all_tasks.append(_build_task_status_response(current_job))
 
-    # Get all jobs from the queues (including completed ones)
+    # Get all jobs from the active queues
     low_prio_jobs = low_prio_queue.get_jobs()
     default_prio_jobs = default_queue.get_jobs()
     high_prio_jobs = high_prio_queue.get_jobs()
@@ -249,7 +249,6 @@ async def get_tasks_status(request: Request) -> list[TaskStatusResponse]:
     for job in low_prio_jobs + default_prio_jobs + high_prio_jobs:
         all_tasks.append(_build_task_status_response(job))
 
-    # Get finished jobs from all queues
     finished_registries = [
         FinishedJobRegistry(queue=low_prio_queue),
         FinishedJobRegistry(queue=default_queue),
@@ -262,21 +261,23 @@ async def get_tasks_status(request: Request) -> list[TaskStatusResponse]:
         FailedJobRegistry(queue=high_prio_queue),
     ]
 
-    # Process finished jobs
-    for registry in finished_registries:
-        for job_id in registry.get_job_ids():
-            job = Job.fetch(job_id, connection=redis_client)
-            all_tasks.append(
-                _build_task_status_response(
-                    job,
-                )
-            )
+    registry_job_ids: list[str] = []
+    for registry in finished_registries + failed_registries:
+        registry_job_ids.extend(registry.get_job_ids()[:limit])
 
-    # Process failed jobs
-    for registry in failed_registries:
-        for job_id in registry.get_job_ids():
-            job = Job.fetch(job_id, connection=redis_client)
-            all_tasks.append(_build_task_status_response(job))
+    # Preserve order while removing duplicates
+    deduped_job_ids = list(dict.fromkeys(registry_job_ids))[:limit]
+
+    if deduped_job_ids:
+        fetch_many = getattr(Job, "fetch_many", None)
+        if callable(fetch_many):
+            jobs = fetch_many(deduped_job_ids, connection=redis_client)
+        else:
+            jobs = [Job.fetch(job_id, connection=redis_client) for job_id in deduped_job_ids]
+
+        for job in jobs:
+            if job:
+                all_tasks.append(_build_task_status_response(job))
 
     all_tasks.sort(
         key=lambda x: x["started_at"] or x["enqueued_at"] or x["created_at"] or "",
@@ -408,3 +409,4 @@ async def run_single_task(request: Request, task_name: str) -> TaskExecutionResp
         ),
         "enqueued_at": job.enqueued_at.isoformat() if job.enqueued_at else None,
     }
+

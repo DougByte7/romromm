@@ -2,8 +2,8 @@ import functools
 from collections.abc import Sequence
 from datetime import datetime
 
-from sqlalchemy import delete, or_, select, update
-from sqlalchemy.orm import Query, QueryableAttribute, Session, load_only, selectinload
+from sqlalchemy import delete, func, or_, select, update
+from sqlalchemy.orm import Query, QueryableAttribute, Session, defer, load_only, selectinload
 
 from decorators.database import begin_session
 from models.platform import Platform
@@ -77,7 +77,40 @@ class DBPlatformsHandler(DBBaseHandler):
         if only_fields:
             query = query.options(load_only(*only_fields))
 
-        return session.scalars(query.order_by(Platform.name.asc())).unique().all()
+        # Avoid evaluating per-row correlated subqueries for list endpoints.
+        query = query.options(defer(Platform.rom_count), defer(Platform.fs_size_bytes))
+        platforms = session.scalars(query.order_by(Platform.name.asc())).unique().all()
+
+        if not platforms:
+            return platforms
+
+        platform_ids = [p.id for p in platforms]
+        rom_counts = dict(
+            session.execute(
+                select(Rom.platform_id, func.count(Rom.id))
+                .where(Rom.platform_id.in_(platform_ids))
+                .group_by(Rom.platform_id)
+            ).all()
+        )
+        fs_sizes = dict(
+            session.execute(
+                select(Rom.platform_id, func.coalesce(func.sum(Rom.fs_size_bytes), 0))
+                .where(Rom.platform_id.in_(platform_ids))
+                .group_by(Rom.platform_id)
+            ).all()
+        )
+
+        for platform in platforms:
+            platform.rom_count = int(rom_counts.get(platform.id, 0))
+            platform.fs_size_bytes = int(fs_sizes.get(platform.id, 0))
+
+        return platforms
+    @begin_session
+    def get_platform_ids(
+        self,
+        session: Session = None,  # type: ignore
+    ) -> list[int]:
+        return list(session.scalars(select(Platform.id)).all())
 
     @begin_session
     @with_firmware
@@ -153,3 +186,7 @@ class DBPlatformsHandler(DBBaseHandler):
             .execution_options(synchronize_session="fetch")
         )
         return missing_platforms
+
+
+
+

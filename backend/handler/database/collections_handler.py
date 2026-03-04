@@ -105,6 +105,19 @@ class DBCollectionsHandler(DBBaseHandler):
             query = query.options(load_only(*only_fields))
 
         return session.scalars(query.order_by(Collection.name.asc())).unique().all()
+    @begin_session
+    def get_collection_ids_for_user(
+        self,
+        user_id: int,
+        session: Session = None,  # type: ignore
+    ) -> list[int]:
+        return list(
+            session.scalars(
+                select(Collection.id).where(
+                    or_(Collection.user_id == user_id, Collection.is_public.is_(True))
+                )
+            ).all()
+        )
 
     @begin_session
     @with_roms
@@ -334,3 +347,5 @@ class DBCollectionsHandler(DBBaseHandler):
             order_by=criteria.get("order_by", "name"),
             order_dir=criteria.get("order_dir", "asc"),
         )
+
+
