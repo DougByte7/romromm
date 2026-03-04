@@ -235,6 +235,8 @@ async def _identify_rom(
     metadata_sources: list[str],
     socket_manager: socketio.AsyncRedisManager,
     scan_stats: ScanStats,
+    asset_tasks: list[asyncio.Task[None]],
+    asset_semaphore: asyncio.Semaphore,
     calculate_hashes: bool = True,
 ) -> None:
     # Break early if the flag is set
@@ -373,83 +375,105 @@ async def _identify_rom(
     if scan_type == ScanType.HASHES:
         return
 
-    path_cover_s, path_cover_l = await fs_resource_handler.get_cover(
-        entity=_added_rom,
-        overwrite=_added_rom.url_cover != rom.url_cover,
-        url_cover=_added_rom.url_cover,
-    )
+    async def process_rom_assets() -> None:
+        # Stop early if requested
+        if redis_client.get(STOP_SCAN_FLAG):
+            return
 
-    path_manual = await fs_resource_handler.get_manual(
-        rom=_added_rom,
-        overwrite=_added_rom.url_manual != rom.url_manual,
-        url_manual=_added_rom.url_manual,
-    )
-
-    screenshots_changed = pydash.xor(
-        _added_rom.url_screenshots or [], rom.url_screenshots or []
-    )
-    path_screenshots = await fs_resource_handler.get_rom_screenshots(
-        rom=_added_rom,
-        overwrite=bool(screenshots_changed),
-        url_screenshots=_added_rom.url_screenshots,
-    )
-
-    _added_rom.path_cover_s = path_cover_s
-    _added_rom.path_cover_l = path_cover_l
-    _added_rom.path_screenshots = path_screenshots
-    _added_rom.path_manual = path_manual
-
-    # Update the scanned rom with the cover and screenshots paths and update database
-    db_rom_handler.update_rom(
-        _added_rom.id,
-        {
-            "path_cover_s": path_cover_s,
-            "path_cover_l": path_cover_l,
-            "path_screenshots": path_screenshots,
-            "path_manual": path_manual,
-        },
-    )
-
-    # Handle special media files from Screenscraper
-    if _added_rom.ss_metadata:
-        preferred_media_types = get_preferred_media_types()
-        for media_type in preferred_media_types:
-            if _added_rom.ss_metadata.get(f"{media_type.value}_path"):
-                await fs_resource_handler.store_media_file(
-                    _added_rom.ss_metadata[f"{media_type.value}_url"],
-                    _added_rom.ss_metadata[f"{media_type.value}_path"],
+        async with asset_semaphore:
+            try:
+                path_cover_s, path_cover_l = await fs_resource_handler.get_cover(
+                    entity=_added_rom,
+                    overwrite=_added_rom.url_cover != rom.url_cover,
+                    url_cover=_added_rom.url_cover,
                 )
 
-    # Handle special media files from ES-DE gamelist.xml
-    if _added_rom.gamelist_metadata:
-        preferred_media_types = get_preferred_media_types()
-        for media_type in preferred_media_types:
-            if _added_rom.gamelist_metadata.get(f"{media_type.value}_path"):
-                await fs_resource_handler.store_media_file(
-                    _added_rom.gamelist_metadata[f"{media_type.value}_url"],
-                    _added_rom.gamelist_metadata[f"{media_type.value}_path"],
+                path_manual = await fs_resource_handler.get_manual(
+                    rom=_added_rom,
+                    overwrite=_added_rom.url_manual != rom.url_manual,
+                    url_manual=_added_rom.url_manual,
                 )
 
-    # Store normal and locked badges
-    if _added_rom.ra_metadata:
-        for ach in _added_rom.ra_metadata.get("achievements", []):
-            badge_url_lock = ach.get("badge_url_lock", None)
-            badge_path_lock = ach.get("badge_path_lock", None)
-            if badge_url_lock and badge_path_lock:
-                await fs_resource_handler.store_ra_badge(
-                    badge_url_lock, badge_path_lock
+                screenshots_changed = pydash.xor(
+                    _added_rom.url_screenshots or [], rom.url_screenshots or []
                 )
-            badge_url = ach.get("badge_url", None)
-            badge_path = ach.get("badge_path", None)
-            if badge_url and badge_path:
-                await fs_resource_handler.store_ra_badge(badge_url, badge_path)
+                path_screenshots = await fs_resource_handler.get_rom_screenshots(
+                    rom=_added_rom,
+                    overwrite=bool(screenshots_changed),
+                    url_screenshots=_added_rom.url_screenshots,
+                )
 
-    await socket_manager.emit(
-        "scan:scanning_rom",
-        SimpleRomSchema.from_orm_with_factory(_added_rom).model_dump(
-            exclude={"created_at", "updated_at", "rom_user", "last_modified", "files"}
-        ),
-    )
+                _added_rom.path_cover_s = path_cover_s
+                _added_rom.path_cover_l = path_cover_l
+                _added_rom.path_screenshots = path_screenshots
+                _added_rom.path_manual = path_manual
+
+                # Update the scanned rom with the cover and screenshots paths and update database
+                db_rom_handler.update_rom(
+                    _added_rom.id,
+                    {
+                        "path_cover_s": path_cover_s,
+                        "path_cover_l": path_cover_l,
+                        "path_screenshots": path_screenshots,
+                        "path_manual": path_manual,
+                    },
+                )
+
+                # Handle special media files from Screenscraper
+                if _added_rom.ss_metadata:
+                    preferred_media_types = get_preferred_media_types()
+                    for media_type in preferred_media_types:
+                        if _added_rom.ss_metadata.get(f"{media_type.value}_path"):
+                            await fs_resource_handler.store_media_file(
+                                _added_rom.ss_metadata[f"{media_type.value}_url"],
+                                _added_rom.ss_metadata[f"{media_type.value}_path"],
+                            )
+
+                # Handle special media files from ES-DE gamelist.xml
+                if _added_rom.gamelist_metadata:
+                    preferred_media_types = get_preferred_media_types()
+                    for media_type in preferred_media_types:
+                        if _added_rom.gamelist_metadata.get(f"{media_type.value}_path"):
+                            await fs_resource_handler.store_media_file(
+                                _added_rom.gamelist_metadata[f"{media_type.value}_url"],
+                                _added_rom.gamelist_metadata[f"{media_type.value}_path"],
+                            )
+
+                # Store normal and locked badges
+                if _added_rom.ra_metadata:
+                    for ach in _added_rom.ra_metadata.get("achievements", []):
+                        badge_url_lock = ach.get("badge_url_lock", None)
+                        badge_path_lock = ach.get("badge_path_lock", None)
+                        if badge_url_lock and badge_path_lock:
+                            await fs_resource_handler.store_ra_badge(
+                                badge_url_lock, badge_path_lock
+                            )
+                        badge_url = ach.get("badge_url", None)
+                        badge_path = ach.get("badge_path", None)
+                        if badge_url and badge_path:
+                            await fs_resource_handler.store_ra_badge(
+                                badge_url, badge_path
+                            )
+
+                refreshed_rom = db_rom_handler.get_rom(_added_rom.id)
+                if refreshed_rom:
+                    await socket_manager.emit(
+                        "scan:scanning_rom",
+                        SimpleRomSchema.from_orm_with_factory(refreshed_rom).model_dump(
+                            exclude={
+                                "created_at",
+                                "updated_at",
+                                "rom_user",
+                                "last_modified",
+                                "files",
+                            }
+                        ),
+                    )
+            except Exception as e:
+                log.error(f"Error processing assets for ROM {_added_rom.fs_name}: {e}")
+
+    asset_tasks.append(asyncio.create_task(process_rom_assets()))
+
 
 
 async def _identify_platform(
@@ -537,6 +561,9 @@ async def _identify_platform(
 
     # Create semaphore to limit concurrent ROM scanning
     scan_semaphore = asyncio.Semaphore(SCAN_WORKERS)
+    # Process media downloads in parallel with ROM identification
+    asset_semaphore = asyncio.Semaphore(SCAN_WORKERS)
+    asset_tasks: list[asyncio.Task[None]] = []
 
     async def scan_rom_with_semaphore(fs_rom: FSRom, rom: Rom | None) -> None:
         """Scan a single ROM with semaphore limiting"""
@@ -550,6 +577,8 @@ async def _identify_platform(
                 metadata_sources=metadata_sources,
                 socket_manager=socket_manager,
                 scan_stats=scan_stats,
+                asset_tasks=asset_tasks,
+                asset_semaphore=asset_semaphore,
                 calculate_hashes=calculate_hashes,
             )
 
@@ -572,6 +601,10 @@ async def _identify_platform(
         for result, fs_rom in zip(batched_results, fs_roms_batch, strict=False):
             if isinstance(result, Exception):
                 log.error(f"Error scanning ROM {fs_rom['fs_name']}: {result}")
+
+    if asset_tasks:
+        # Keep scan completion semantics while allowing ROM identification to continue.
+        await asyncio.gather(*asset_tasks, return_exceptions=True)
 
     missing_roms = db_rom_handler.mark_missing_roms(
         platform.id, [rom["fs_name"] for rom in fs_roms]
