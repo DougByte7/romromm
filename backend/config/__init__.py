@@ -126,6 +126,7 @@ DISABLE_USERPASS_LOGIN: Final[bool] = safe_str_to_bool(
     _get_env("DISABLE_USERPASS_LOGIN")
 )
 DISABLE_SETUP_WIZARD: Final[bool] = safe_str_to_bool(_get_env("DISABLE_SETUP_WIZARD"))
+FORCE_SETUP_WIZARD: Final[bool] = safe_str_to_bool(_get_env("FORCE_SETUP_WIZARD"))
 
 # OIDC
 OIDC_ENABLED: Final[bool] = safe_str_to_bool(_get_env("OIDC_ENABLED"))
@@ -224,3 +225,4 @@ SENTRY_DSN: Final[str | None] = _get_env("SENTRY_DSN")
 
 # TESTING
 IS_PYTEST_RUN: Final = bool(_get_env("PYTEST_VERSION"))
+

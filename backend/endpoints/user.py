@@ -5,6 +5,7 @@ from fastapi import Body, Form, HTTPException
 from fastapi import Path as PathVar
 from fastapi import Request, status
 
+from config import FORCE_SETUP_WIZARD
 from decorators.auth import protected_route
 from endpoints.forms.identity import UserForm
 from endpoints.responses.identity import InviteLinkSchema, UserSchema
@@ -60,6 +61,7 @@ def add_user(
     if (
         Scope.USERS_WRITE not in request.auth.scopes
         and len(db_user_handler.get_admin_users()) > 0
+        and not FORCE_SETUP_WIZARD
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -122,6 +124,7 @@ def create_invite_link(request: Request, role: str) -> InviteLinkSchema:
     if (
         Scope.USERS_WRITE not in request.auth.scopes
         and len(db_user_handler.get_admin_users()) > 0
+        and not FORCE_SETUP_WIZARD
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

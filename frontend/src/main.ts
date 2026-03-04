@@ -17,9 +17,17 @@ async function initializeData() {
   const configStore = storeConfig();
   const tasksStore = storeTasks();
 
-  // Load initial data (config + heartbeat + user)
+  // Load heartbeat first to decide whether setup wizard is active.
+  await heartbeatStore.fetchHeartbeat();
+
+  if (heartbeatStore.value.SYSTEM.SHOW_SETUP_WIZARD) {
+    await configStore.fetchConfig();
+    authStore.reset();
+    return;
+  }
+
+  // Load remaining initial data only when setup wizard is not active.
   await Promise.all([
-    heartbeatStore.fetchHeartbeat(),
     authStore.fetchCurrentUser(),
     configStore.fetchConfig(),
     tasksStore.fetchTasks(),

@@ -7,6 +7,7 @@ from config import (
     DISABLE_RUFFLE_RS,
     DISABLE_SETUP_WIZARD,
     DISABLE_USERPASS_LOGIN,
+    FORCE_SETUP_WIZARD,
     ENABLE_SCHEDULED_CONVERT_IMAGES_TO_WEBP,
     ENABLE_SCHEDULED_RESCAN,
     ENABLE_SCHEDULED_UPDATE_LAUNCHBOX_METADATA,
@@ -76,8 +77,8 @@ async def heartbeat() -> HeartbeatResponse:
     return {
         "SYSTEM": {
             "VERSION": get_version(),
-            "SHOW_SETUP_WIZARD": len(db_user_handler.get_admin_users()) == 0
-            and not DISABLE_SETUP_WIZARD,
+            "SHOW_SETUP_WIZARD": FORCE_SETUP_WIZARD
+            or (len(db_user_handler.get_admin_users()) == 0 and not DISABLE_SETUP_WIZARD),
         },
         "METADATA_SOURCES": {
             "ANY_SOURCE_ENABLED": (
@@ -194,6 +195,7 @@ async def get_setup_library_info(request: Request):
     if (
         Scope.PLATFORMS_READ not in request.auth.scopes
         and len(db_user_handler.get_admin_users()) > 0
+        and not FORCE_SETUP_WIZARD
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -284,6 +286,7 @@ async def create_setup_platforms(request: Request, platform_slugs: list[str]):
     if (
         Scope.PLATFORMS_WRITE not in request.auth.scopes
         and len(db_user_handler.get_admin_users()) > 0
+        and not FORCE_SETUP_WIZARD
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
