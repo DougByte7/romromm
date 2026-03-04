@@ -1,7 +1,7 @@
 <!-- trunk-ignore-all(markdownlint/MD033) -->
 <!-- trunk-ignore(markdownlint/MD041) -->
 <div align="center">
-  <img src=".github/resources/isotipo.png" height="180px" width="auto" alt="romm logo">
+  <img src=".github/resources/isotipo.svg" height="180px" width="auto" alt="romm logo">
 
   <h3 style="font-size: 25px;">
     A beautiful, powerful, self-hosted ROM manager and player.
