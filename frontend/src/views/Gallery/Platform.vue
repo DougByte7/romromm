@@ -2,7 +2,7 @@
 import { useLocalStorage, useScroll } from "@vueuse/core";
 import type { Emitter } from "mitt";
 import { storeToRefs } from "pinia";
-import { inject, onMounted, ref, watch } from "vue";
+import { inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import GalleryAppBar from "@/components/Gallery/AppBar/Platform/Base.vue";
 import FabOverlay from "@/components/Gallery/FabOverlay.vue";
@@ -38,6 +38,7 @@ const noPlatformError = ref(false);
 const emitter = inject<Emitter<Events>>("emitter");
 const enable3DEffect = useLocalStorage("settings.enable3DEffect", false);
 let timeout: ReturnType<typeof setTimeout>;
+let unwatchPlatforms: (() => void) | null = null;
 
 async function fetchRoms() {
   if (fetchingRoms.value) return;
@@ -144,7 +145,8 @@ onMounted(async () => {
   const routePlatformId = Number(route.params.platform);
   currentCollection.value = null;
 
-  watch(
+  unwatchPlatforms?.();
+  unwatchPlatforms = watch(
     () => filteredPlatforms.value,
     async (platforms) => {
       if (platforms.length > 0) {
@@ -172,6 +174,9 @@ onMounted(async () => {
     { immediate: true },
   );
 });
+onUnmounted(() => {
+  unwatchPlatforms?.();
+});
 
 onBeforeRouteUpdate(async (to, from) => {
   // Avoid unnecessary actions if navigating within the same path
@@ -179,7 +184,8 @@ onBeforeRouteUpdate(async (to, from) => {
 
   const routePlatformId = Number(to.params.platform);
 
-  watch(
+  unwatchPlatforms?.();
+  unwatchPlatforms = watch(
     () => filteredPlatforms.value,
     async (platforms) => {
       if (platforms.length > 0) {
@@ -274,3 +280,4 @@ onBeforeRouteUpdate(async (to, from) => {
 
   <EmptyPlatform v-else />
 </template>
+

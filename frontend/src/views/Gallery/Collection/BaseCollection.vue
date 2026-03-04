@@ -2,7 +2,7 @@
 import { useLocalStorage, useScroll } from "@vueuse/core";
 import type { Emitter } from "mitt";
 import { storeToRefs } from "pinia";
-import { inject, onMounted, ref, watch } from "vue";
+import { inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import GalleryAppBarCollection from "@/components/Gallery/AppBar/Collection/Base.vue";
 import FabOverlay from "@/components/Gallery/FabOverlay.vue";
@@ -44,6 +44,7 @@ const openedMenu = ref(false);
 const openedMenuRomId = ref<number>();
 const enable3DEffect = useLocalStorage("settings.enable3DEffect", false);
 let timeout: ReturnType<typeof setTimeout>;
+let unwatchCollections: (() => void) | null = null;
 
 async function fetchRoms() {
   if (fetchingRoms.value) return;
@@ -141,6 +142,7 @@ const { y: windowY } = useScroll(window, { throttle: 500 });
 watch(windowY, () => {
   clearTimeout(timeout);
 
+
   window.setTimeout(async () => {
     scrolledToTop.value = windowY.value === 0;
     if (
@@ -164,7 +166,8 @@ onMounted(async () => {
   const routeCollectionId = route.params.collection;
   currentPlatform.value = null;
 
-  watch(
+  unwatchCollections?.();
+  unwatchCollections = watch(
     () => props.collections,
     async (collections) => {
       if (
@@ -190,6 +193,9 @@ onMounted(async () => {
     { immediate: true }, // Ensure watcher is triggered immediately
   );
 });
+onUnmounted(() => {
+  unwatchCollections?.();
+});
 
 onBeforeRouteUpdate(async (to, from) => {
   // Triggers when change param of the same route
@@ -197,7 +203,8 @@ onBeforeRouteUpdate(async (to, from) => {
   if (to.path === from.path) return true;
   const routeCollectionId = to.params.collection;
 
-  watch(
+  unwatchCollections?.();
+  unwatchCollections = watch(
     () => props.collections,
     async (collections) => {
       if (collections.length > 0) {
@@ -292,3 +299,4 @@ onBeforeRouteUpdate(async (to, from) => {
 
   <EmptyCollection v-else />
 </template>
+

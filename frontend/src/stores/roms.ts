@@ -193,6 +193,48 @@ export default defineStore("roms", {
         galleryFilter.setFilterPlayerCounts(filter_values.player_counts);
       }
     },
+    _buildRequestSignature(params: GetRomsParams) {
+      const asList = (value: unknown) =>
+        Array.isArray(value) ? value.join(",") : String(value ?? "");
+
+      return [
+        params.searchTerm,
+        asList(params.platformIds),
+        params.collectionId,
+        params.virtualCollectionId,
+        params.smartCollectionId,
+        params.limit,
+        params.offset,
+        params.orderBy,
+        params.orderDir,
+        params.groupByMetaId,
+        params.filterMatched,
+        params.filterFavorites,
+        params.filterDuplicates,
+        params.filterPlayables,
+        params.filterRA,
+        params.filterMissing,
+        params.filterVerified,
+        asList(params.selectedGenres),
+        asList(params.selectedFranchises),
+        asList(params.selectedCollections),
+        asList(params.selectedCompanies),
+        asList(params.selectedAgeRatings),
+        asList(params.selectedRegions),
+        asList(params.selectedLanguages),
+        asList(params.selectedPlayerCounts),
+        asList(params.selectedStatuses),
+        params.genresLogic,
+        params.franchisesLogic,
+        params.collectionsLogic,
+        params.companiesLogic,
+        params.ageRatingsLogic,
+        params.regionsLogic,
+        params.languagesLogic,
+        params.statusesLogic,
+        params.playerCountsLogic,
+      ].join("|");
+    },
     async fetchRoms(concat = true): Promise<SimpleRom[]> {
       if (this.fetchingRoms) return Promise.resolve([]);
       this.fetchingRoms = true;
@@ -202,6 +244,7 @@ export default defineStore("roms", {
 
       // Capture current request parameters to validate background updates
       const currentRequestParams = this._buildRequestParams(galleryFilterStore);
+      const currentRequestSignature = this._buildRequestSignature(currentRequestParams);
 
       return new Promise((resolve, reject) => {
         cachedApiService
@@ -211,8 +254,8 @@ export default defineStore("roms", {
             // Check if parameters have changed since the request was made
             const currentParams = this._buildRequestParams(galleryFilterStore);
             const paramsChanged =
-              JSON.stringify(currentParams) !==
-              JSON.stringify(currentRequestParams);
+              this._buildRequestSignature(currentParams) !==
+              currentRequestSignature;
             if (paramsChanged) return;
             this._postFetchRoms(
               response,
@@ -351,3 +394,4 @@ export default defineStore("roms", {
     },
   },
 });
+
