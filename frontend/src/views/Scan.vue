@@ -80,15 +80,20 @@ watch(metadataOptions, (newOptions) => {
   );
 });
 
-// Adding each new scanned platform to panelIndex to be open by default
+// Open only the latest scanned platform with ROMs.
+// Avoid deep watch here to prevent expensive reactivity on large ROM lists.
 watch(
-  scanningPlatforms,
+  () => scanningPlatforms.value.length,
   () => {
-    panels.value = scanningPlatforms.value
-      .map((p, index) => (p.roms.length > 0 ? index : -1))
-      .filter((index) => index !== -1);
+    let lastIndexWithRoms = -1;
+    for (let i = scanningPlatforms.value.length - 1; i >= 0; i -= 1) {
+      if (scanningPlatforms.value[i].roms.length > 0) {
+        lastIndexWithRoms = i;
+        break;
+      }
+    }
+    panels.value = lastIndexWithRoms >= 0 ? [lastIndexWithRoms] : [];
   },
-  { deep: true },
 );
 
 const scanOptions = [
@@ -623,3 +628,4 @@ async function stopScan() {
   padding: 0px;
 }
 </style>
+

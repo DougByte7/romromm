@@ -1,12 +1,21 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useDisplay } from "vuetify";
 import RomListItem from "@/components/common/Game/ListItem.vue";
 import PlatformIcon from "@/components/common/Platform/PlatformIcon.vue";
 import type { ScanningPlatform } from "@/stores/scanning";
 
-defineProps<{ platform: ScanningPlatform }>();
+const props = defineProps<{ platform: ScanningPlatform }>();
 
 const { t } = useI18n();
+const { smAndDown } = useDisplay();
+const ITEM_HEIGHT = 88;
+const virtualListMaxHeight = computed(() => (smAndDown.value ? 420 : 620));
+const virtualListHeight = computed(() => {
+  const totalHeight = props.platform.roms.length * ITEM_HEIGHT;
+  return Math.min(totalHeight, virtualListMaxHeight.value);
+});
 </script>
 
 <template>
@@ -41,140 +50,161 @@ const { t } = useI18n();
     </v-list-item>
   </v-expansion-panel-title>
   <v-expansion-panel-text class="bg-toplayer">
-    <RomListItem
-      v-for="rom in platform.roms"
-      :key="rom.id"
-      class="pa-4"
-      :rom="rom"
-      with-link
-      with-filename
+    <div
+      v-if="platform.roms.length > 0"
+      class="roms-virtual-container"
+      :style="{
+        height: `${virtualListHeight}px`,
+        maxHeight: `${virtualListMaxHeight}px`,
+      }"
     >
-      <template #append>
-        <template v-if="rom.is_identifying">
-          <v-chip color="orange" size="x-small" label>
-            <v-icon class="mr-1"> mdi-search-web </v-icon>
-            Identifying…
-          </v-chip>
+      <v-virtual-scroll
+        :items="platform.roms"
+        :height="virtualListHeight"
+        :item-height="ITEM_HEIGHT"
+      >
+        <template #default="{ item: rom }">
+          <RomListItem
+            :key="rom.id || rom.fs_name"
+            class="pa-4"
+            :rom="rom"
+            with-link
+            with-filename
+          >
+            <template #append>
+              <template v-if="rom.is_identifying">
+                <v-chip color="orange" size="x-small" label>
+                  <v-icon class="mr-1"> mdi-search-web </v-icon>
+                  Identifying...
+                </v-chip>
+              </template>
+              <template v-else>
+                <v-chip v-if="rom.is_unidentified" color="red" size="x-small" label>
+                  <v-icon class="mr-1"> mdi-close </v-icon>
+                  {{ t("scan.not-identified") }}
+                </v-chip>
+                <v-chip
+                  v-if="rom.hasheous_id"
+                  title="Verified with Hasheous"
+                  class="text-white pa-0 mr-1"
+                  size="small"
+                >
+                  <v-avatar
+                    variant="text"
+                    class="bg-romm-green"
+                    size="26"
+                    rounded="0"
+                  >
+                    <v-icon>mdi-check-decagram-outline</v-icon>
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.igdb_id"
+                  class="pa-0 mr-1"
+                  size="small"
+                  title="IGDB match"
+                >
+                  <v-avatar variant="text" size="26" rounded>
+                    <v-img src="/assets/scrappers/igdb.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.ss_id"
+                  class="pa-0 mr-1"
+                  size="small"
+                  title="ScreenScraper match"
+                >
+                  <v-avatar variant="text" size="26" rounded>
+                    <v-img src="/assets/scrappers/ss.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.moby_id"
+                  class="pa-0 mr-1"
+                  size="small"
+                  title="MobyGames match"
+                >
+                  <v-avatar variant="text" size="26" rounded>
+                    <v-img src="/assets/scrappers/moby.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.launchbox_id"
+                  class="pa-0 mr-1"
+                  size="small"
+                  title="LaunchBox match"
+                >
+                  <v-avatar variant="text" size="26" style="background: #185a7c">
+                    <v-img src="/assets/scrappers/launchbox.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.ra_id"
+                  class="pa-0 mr-1"
+                  size="small"
+                  title="RetroAchievements match"
+                >
+                  <v-avatar variant="text" size="26" rounded>
+                    <v-img src="/assets/scrappers/ra.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.hasheous_id"
+                  class="pa-1 mr-1 bg-surface"
+                  size="small"
+                  title="Hasheous match"
+                >
+                  <v-avatar variant="text" size="18" rounded>
+                    <v-img src="/assets/scrappers/hasheous.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.flashpoint_id"
+                  class="pa-1 mr-1 bg-surface"
+                  size="small"
+                  title="Flashpoint match"
+                >
+                  <v-avatar variant="text" size="18" rounded>
+                    <v-img src="/assets/scrappers/flashpoint.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.hltb_id"
+                  class="pa-1 mr-1 bg-surface"
+                  size="small"
+                  title="HowLongToBeat match"
+                >
+                  <v-avatar variant="text" size="18" rounded>
+                    <v-img src="/assets/scrappers/hltb.png" />
+                  </v-avatar>
+                </v-chip>
+                <v-chip
+                  v-if="rom.gamelist_id"
+                  class="pa-1 mr-1 bg-surface"
+                  size="small"
+                  title="ES-DE match"
+                >
+                  <v-avatar variant="text" size="18" rounded>
+                    <v-img src="/assets/scrappers/esde.png" />
+                  </v-avatar>
+                </v-chip>
+              </template>
+            </template>
+          </RomListItem>
         </template>
-        <template v-else>
-          <v-chip v-if="rom.is_unidentified" color="red" size="x-small" label>
-            <v-icon class="mr-1"> mdi-close </v-icon>
-            {{ t("scan.not-identified") }}
-          </v-chip>
-          <v-chip
-            v-if="rom.hasheous_id"
-            title="Verified with Hasheous"
-            class="text-white pa-0 mr-1"
-            size="small"
-          >
-            <v-avatar
-              variant="text"
-              class="bg-romm-green"
-              size="26"
-              rounded="0"
-            >
-              <v-icon>mdi-check-decagram-outline</v-icon>
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.igdb_id"
-            class="pa-0 mr-1"
-            size="small"
-            title="IGDB match"
-          >
-            <v-avatar variant="text" size="26" rounded>
-              <v-img src="/assets/scrappers/igdb.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.ss_id"
-            class="pa-0 mr-1"
-            size="small"
-            title="ScreenScraper match"
-          >
-            <v-avatar variant="text" size="26" rounded>
-              <v-img src="/assets/scrappers/ss.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.moby_id"
-            class="pa-0 mr-1"
-            size="small"
-            title="MobyGames match"
-          >
-            <v-avatar variant="text" size="26" rounded>
-              <v-img src="/assets/scrappers/moby.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.launchbox_id"
-            class="pa-0 mr-1"
-            size="small"
-            title="LaunchBox match"
-          >
-            <v-avatar variant="text" size="26" style="background: #185a7c">
-              <v-img src="/assets/scrappers/launchbox.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.ra_id"
-            class="pa-0 mr-1"
-            size="small"
-            title="RetroAchievements match"
-          >
-            <v-avatar variant="text" size="26" rounded>
-              <v-img src="/assets/scrappers/ra.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.hasheous_id"
-            class="pa-1 mr-1 bg-surface"
-            size="small"
-            title="Hasheous match"
-          >
-            <v-avatar variant="text" size="18" rounded>
-              <v-img src="/assets/scrappers/hasheous.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.flashpoint_id"
-            class="pa-1 mr-1 bg-surface"
-            size="small"
-            title="Flashpoint match"
-          >
-            <v-avatar variant="text" size="18" rounded>
-              <v-img src="/assets/scrappers/flashpoint.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.hltb_id"
-            class="pa-1 mr-1 bg-surface"
-            size="small"
-            title="HowLongToBeat match"
-          >
-            <v-avatar variant="text" size="18" rounded>
-              <v-img src="/assets/scrappers/hltb.png" />
-            </v-avatar>
-          </v-chip>
-          <v-chip
-            v-if="rom.gamelist_id"
-            class="pa-1 mr-1 bg-surface"
-            size="small"
-            title="ES-DE match"
-          >
-            <v-avatar variant="text" size="18" rounded>
-              <v-img src="/assets/scrappers/esde.png" />
-            </v-avatar>
-          </v-chip>
-        </template>
-      </template>
-    </RomListItem>
+      </v-virtual-scroll>
+    </div>
     <v-list-item v-if="platform.roms.length == 0" class="text-center my-2">
       {{ t("scan.no-new-roms") }}
     </v-list-item>
   </v-expansion-panel-text>
 </template>
 <style scoped>
+.roms-virtual-container {
+  overflow-y: auto;
+  transition: height 220ms ease;
+}
+
 .v-chip {
   contain: layout style paint;
 }
