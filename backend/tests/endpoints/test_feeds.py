@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
@@ -7,6 +9,20 @@ from handler.database import db_platform_handler, db_rom_handler
 from handler.metadata.base_handler import UniversalPlatformSlug as UPS
 from models.platform import Platform
 from models.rom import Rom, RomFile, RomFileCategory
+
+
+def _add_rom_file(rom: Rom, category: RomFileCategory | None = None) -> RomFile:
+    """Add a top-level RomFile record matching the ROM's fs_name."""
+    return db_rom_handler.add_rom_file(
+        RomFile(
+            rom_id=rom.id,
+            file_name=rom.fs_name,
+            file_path=rom.fs_path,
+            file_size_bytes=123,
+            sha1_hash="deadbeef",
+            category=category,
+        )
+    )
 
 
 @pytest.fixture
@@ -285,7 +301,7 @@ def test_pkgj_psp_games_feed(
         platform.id,
         {"name": "PlayStation Portable", "slug": UPS.PSP, "fs_slug": UPS.PSP},
     )
-    db_rom_handler.update_rom(
+    rom = db_rom_handler.update_rom(
         rom.id,
         {
             "platform_id": platform.id,
@@ -300,14 +316,16 @@ def test_pkgj_psp_games_feed(
             "regions": ["US"],
         },
     )
+    _add_rom_file(rom)
 
-    response = client.get(
-        "/api/feeds/pkgj/psp/games",
-        headers={"Authorization": f"Bearer {access_token}"},
-    )
-    assert response.status_code == status.HTTP_200_OK
-    assert response.headers["content-disposition"] == "filename=pkgj_psp_games.txt"
-    assert "Test PSP Game" in response.text
+    with patch("endpoints.feeds.is_compressed_file", return_value=False):
+        response = client.get(
+            "/api/feeds/pkgj/psp/games",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-disposition"] == "filename=pkgj_psp_games.txt"
+        assert "Test PSP Game" in response.text
 
 
 def test_pkgj_psp_dlc_feed(
@@ -317,7 +335,7 @@ def test_pkgj_psp_dlc_feed(
         platform.id,
         {"name": "PlayStation Portable", "slug": UPS.PSP, "fs_slug": UPS.PSP},
     )
-    db_rom_handler.update_rom(
+    rom = db_rom_handler.update_rom(
         rom.id,
         {
             "platform_id": platform.id,
@@ -332,6 +350,7 @@ def test_pkgj_psp_dlc_feed(
             "regions": ["US"],
         },
     )
+    _add_rom_file(rom, RomFileCategory.DLC)
 
     response = client.get(
         "/api/feeds/pkgj/psp/dlc",
@@ -349,7 +368,7 @@ def test_pkgj_psvita_games_feed(
         platform.id,
         {"name": "PlayStation Vita", "slug": UPS.PSVITA, "fs_slug": UPS.PSVITA},
     )
-    db_rom_handler.update_rom(
+    rom = db_rom_handler.update_rom(
         rom.id,
         {
             "platform_id": platform.id,
@@ -364,14 +383,16 @@ def test_pkgj_psvita_games_feed(
             "regions": ["US"],
         },
     )
+    _add_rom_file(rom)
 
-    response = client.get(
-        "/api/feeds/pkgj/psvita/games",
-        headers={"Authorization": f"Bearer {access_token}"},
-    )
-    assert response.status_code == status.HTTP_200_OK
-    assert response.headers["content-disposition"] == "filename=pkgj_psvita_games.txt"
-    assert "Test PSV Game" in response.text
+    with patch("endpoints.feeds.is_compressed_file", return_value=False):
+        response = client.get(
+            "/api/feeds/pkgj/psvita/games",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-disposition"] == "filename=pkgj_psvita_games.txt"
+        assert "Test PSV Game" in response.text
 
 
 def test_pkgj_psvita_dlc_feed(
@@ -381,7 +402,7 @@ def test_pkgj_psvita_dlc_feed(
         platform.id,
         {"name": "PlayStation Vita", "slug": UPS.PSVITA, "fs_slug": UPS.PSVITA},
     )
-    db_rom_handler.update_rom(
+    rom = db_rom_handler.update_rom(
         rom.id,
         {
             "platform_id": platform.id,
@@ -396,6 +417,7 @@ def test_pkgj_psvita_dlc_feed(
             "regions": ["US"],
         },
     )
+    _add_rom_file(rom, RomFileCategory.DLC)
 
     response = client.get(
         "/api/feeds/pkgj/psvita/dlc",
@@ -412,7 +434,7 @@ def test_pkgj_psx_games_feed(
     platform = db_platform_handler.update_platform(
         platform.id, {"name": "PlayStation", "slug": UPS.PSX, "fs_slug": UPS.PSX}
     )
-    db_rom_handler.update_rom(
+    rom = db_rom_handler.update_rom(
         rom.id,
         {
             "platform_id": platform.id,
@@ -427,11 +449,13 @@ def test_pkgj_psx_games_feed(
             "regions": ["US"],
         },
     )
+    _add_rom_file(rom)
 
-    response = client.get(
-        "/api/feeds/pkgj/psx/games",
-        headers={"Authorization": f"Bearer {access_token}"},
-    )
-    assert response.status_code == status.HTTP_200_OK
-    assert response.headers["content-disposition"] == "filename=pkgj_psx_games.txt"
-    assert "Test PSX Game" in response.text
+    with patch("endpoints.feeds.is_compressed_file", return_value=False):
+        response = client.get(
+            "/api/feeds/pkgj/psx/games",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.headers["content-disposition"] == "filename=pkgj_psx_games.txt"
+        assert "Test PSX Game" in response.text
