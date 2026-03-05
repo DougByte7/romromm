@@ -3,6 +3,7 @@
 
 # Frontend
 **/assets/library/
+**/assets/romm/
 **/node_modules/
 
 # Backend
