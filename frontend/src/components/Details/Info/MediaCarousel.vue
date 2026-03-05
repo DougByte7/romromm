@@ -109,7 +109,9 @@ const carouselHeight = computed(() => {
         :src="`${FRONTEND_RESOURCES_PATH}/${localVideoPath}`"
         class="h-full object-contain"
         controls
-      />
+      >
+        <track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT" />
+      </video>
     </v-carousel-item>
     <v-carousel-item
       v-for="screenshot_url in screenshots"
@@ -132,3 +134,6 @@ const carouselHeight = computed(() => {
     </template>
   </v-carousel>
 </template>
+
+
+

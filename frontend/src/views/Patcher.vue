@@ -19,17 +19,17 @@ import { formatBytes } from "@/utils";
 // Declare global variables for RomPatcher
 declare global {
   interface Window {
-    BinFile: any;
-    IPS: any;
-    UPS: any;
-    APS: any;
-    APSGBA: any;
-    BPS: any;
-    RUP: any;
-    PPF: any;
-    BDF: any;
-    PMSR: any;
-    VCDIFF: any;
+    BinFile: unknown;
+    IPS: unknown;
+    UPS: unknown;
+    APS: unknown;
+    APSGBA: unknown;
+    BPS: unknown;
+    RUP: unknown;
+    PPF: unknown;
+    BDF: unknown;
+    PMSR: unknown;
+    VCDIFF: unknown;
   }
 }
 
@@ -40,8 +40,8 @@ const loadError = ref<string | null>(null);
 const coreLoaded = ref(false);
 const romFile = ref<File | null>(null);
 const patchFile = ref<File | null>(null);
-const romBin = ref<any | null>(null);
-const patchBin = ref<any | null>(null);
+const romBin = ref<unknown | null>(null);
+const patchBin = ref<unknown | null>(null);
 const romDropZoneRef = ref<HTMLDivElement | null>(null);
 const patchDropZoneRef = ref<HTMLDivElement | null>(null);
 const romInputRef = ref<HTMLInputElement | null>(null);
@@ -133,8 +133,8 @@ async function ensureCoreLoaded() {
     ]);
 
     coreLoaded.value = true;
-  } catch (e: any) {
-    loadError.value = e?.message || String(e);
+  } catch (e: unknown) {
+    loadError.value = (e as { message?: string })?.message || String(e);
   }
 }
 
@@ -297,8 +297,8 @@ async function patchRom() {
     } else {
       statusMessage.value = null;
     }
-  } catch (err: any) {
-    loadError.value = err?.message || String(err);
+  } catch (err: unknown) {
+    loadError.value = (err as { message?: string })?.message || String(err);
     statusMessage.value = null;
   } finally {
     applying.value = false;
@@ -514,6 +514,7 @@ onMounted(async () => {
                 <input
                   ref="romInputRef"
                   type="file"
+                  :aria-label="t('patcher.rom-file')"
                   class="sr-only"
                   style="display: none"
                   @change="onRomChange"
@@ -598,6 +599,7 @@ onMounted(async () => {
                 <input
                   ref="patchInputRef"
                   type="file"
+                  :aria-label="t('patcher.patch-file')"
                   :accept="supportedPatchFormats.join(',')"
                   class="sr-only"
                   style="display: none"
@@ -607,6 +609,7 @@ onMounted(async () => {
                   {{ t("patcher.supported-formats") }}<br />
                   <v-chip
                     v-for="format in supportedPatchFormats"
+                    :key="format"
                     size="x-small"
                     class="mr-1 mt-1"
                     label
@@ -892,3 +895,7 @@ onMounted(async () => {
   }
 }
 </style>
+
+
+
+

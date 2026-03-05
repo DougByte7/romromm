@@ -190,10 +190,10 @@ async function removeManual() {
       icon: "mdi-check-bold",
       color: "green",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     emitter?.emit("snackbarShow", {
       msg: t("rom.manual-remove-failed", {
-        error: error.response?.data?.detail || error.message,
+        error: (error as { response?: { data?: { detail?: string } }; message?: string }).response?.data?.detail || (error as { message?: string }).message,
       }),
       icon: "mdi-close-circle",
       color: "red",
@@ -475,3 +475,4 @@ function handleRomUpdateFromMetadata(updatedRom: UpdateRom) {
     </template>
   </RDialog>
 </template>
+

@@ -808,9 +808,11 @@ onBeforeUnmount(() => {
                   }
             "
             role="button"
+            tabindex="0"
             :aria-selected="focusedExitIndex === i"
             @click="activateExitOption(opt.id)"
             @keydown.enter="activateExitOption(opt.id)"
+            @keydown.space.prevent="activateExitOption(opt.id)"
           >
             <div class="flex items-center gap-3">
               <div class="flex-1">
@@ -886,4 +888,6 @@ onBeforeUnmount(() => {
   display: none;
 }
 </style>
+
+
 

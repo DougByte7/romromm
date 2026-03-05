@@ -58,6 +58,11 @@ onBeforeUnmount(() => {
           emit('hover', { isHovering: false, id: platform.id });
         }
       "
+      @focus="
+        () => {
+          emit('hover', { isHovering: true, id: platform.id });
+        }
+      "
       @blur="
         () => {
           emit('hover', { isHovering: false, id: platform.id });
@@ -102,3 +107,5 @@ onBeforeUnmount(() => {
     </v-card>
   </div>
 </template>
+
+

@@ -93,8 +93,8 @@ watchEffect(() => {
     return;
   }
 
-  const shuffledLarge = [...largeCoverUrls].sort(() => Math.random() - 0.5);
-  const shuffledSmall = [...smallCoverUrls].sort(() => Math.random() - 0.5);
+  const shuffledLarge = largeCoverUrls.toSorted(() => Math.random() - 0.5);
+  const shuffledSmall = smallCoverUrls.toSorted(() => Math.random() - 0.5);
 
   memoizedCovers.value = {
     large: [shuffledLarge[0], shuffledLarge[1]],
@@ -264,3 +264,4 @@ button:focus {
   outline: none;
 }
 </style>
+

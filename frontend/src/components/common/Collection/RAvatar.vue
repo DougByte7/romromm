@@ -57,7 +57,7 @@ watchEffect(() => {
     return;
   }
 
-  const shuffledSmall = [...smallCoverUrls].sort(() => Math.random() - 0.5);
+  const shuffledSmall = smallCoverUrls.toSorted(() => Math.random() - 0.5);
   memoizedCovers.value = [shuffledSmall[0], shuffledSmall[1]];
 });
 
@@ -130,3 +130,4 @@ const secondCover = computed(() => memoizedCovers.value[1]);
   z-index: 0;
 }
 </style>
+

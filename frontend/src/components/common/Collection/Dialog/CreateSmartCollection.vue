@@ -130,7 +130,7 @@ async function createSmartCollection() {
   emitter?.emit("showLoadingDialog", { loading: true, scrim: true });
 
   try {
-    const filterCriteria: Record<string, any> = {};
+    const filterCriteria: Record<string, unknown> = {};
 
     if (searchTerm.value) filterCriteria.search_term = searchTerm.value;
     if (selectedPlatforms.value && selectedPlatforms.value.length > 0) {
@@ -322,3 +322,5 @@ async function createSmartCollection() {
   max-height: 330px;
 }
 </style>
+
+

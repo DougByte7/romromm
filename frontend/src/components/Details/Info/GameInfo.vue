@@ -120,11 +120,17 @@ const coverImageSource = computed(() => {
   }
 });
 
+type AgeRatingEntry = {
+  rating?: string;
+  category?: string;
+  rating_cover_url?: string;
+};
+
 const ageRatingBadges = computed(() => {
   const ratings = props.rom.metadatum?.age_ratings || [];
-  const igdbRatings = (props.rom.igdb_metadata as any)?.age_ratings || [];
+  const igdbRatings = (props.rom.igdb_metadata as { age_ratings?: AgeRatingEntry[] } | null)?.age_ratings || [];
   const igdbByRating = new Map(
-    igdbRatings.map((r: any) => [String(r?.rating || "").trim(), r]),
+    igdbRatings.map((r: AgeRatingEntry) => [String(r?.rating || "").trim(), r]),
   );
   const categorySlug: Record<string, string> = {
     ESRB: "esrb",
@@ -138,7 +144,7 @@ const ageRatingBadges = computed(() => {
   const normalizeRatingCode = (rating: string) =>
     rating.toString().toLowerCase().replace("+", "");
 
-  return ratings.map((entry: any) => {
+  return (ratings as Array<string | AgeRatingEntry>).map((entry) => {
     if (typeof entry === "object" && entry?.rating) {
       return entry;
     }
@@ -258,7 +264,7 @@ function getFilterValues(path: string): string[] {
               height="50"
               width="50"
               class="mr-4 cursor-pointer"
-              @click="onFilterClick('ageRatings', value.rating)"
+              @click="onFilterClick('ageRatings', value.rating ?? '')"
             />
           </div>
         </v-row>
@@ -345,3 +351,8 @@ function getFilterValues(path: string): string[] {
   height: calc(100vh - 110px) !important;
 }
 </style>
+
+
+
+
+

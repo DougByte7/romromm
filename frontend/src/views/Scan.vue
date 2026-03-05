@@ -34,7 +34,7 @@ const expansionPanels = useTemplateRef<HTMLDivElement>("expansion-panels-ref");
 useAutoScroll(scanLog, expansionPanels);
 
 const sortedPlatforms = computed(() => {
-  return filteredPlatforms.value.sort((a, b) =>
+  return filteredPlatforms.value.toSorted((a, b) =>
     a.display_name.localeCompare(b.display_name),
   );
 });
@@ -628,4 +628,6 @@ async function stopScan() {
   padding: 0px;
 }
 </style>
+
+
 

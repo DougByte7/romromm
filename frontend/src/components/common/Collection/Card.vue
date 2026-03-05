@@ -111,8 +111,8 @@ watchEffect(() => {
     return;
   }
 
-  const shuffledLarge = [...largeCoverUrls].sort(() => Math.random() - 0.5);
-  const shuffledSmall = [...smallCoverUrls].sort(() => Math.random() - 0.5);
+  const shuffledLarge = largeCoverUrls.toSorted(() => Math.random() - 0.5);
+  const shuffledSmall = smallCoverUrls.toSorted(() => Math.random() - 0.5);
 
   memoizedCovers.value = {
     large: [shuffledLarge[0], shuffledLarge[1]],
@@ -203,6 +203,11 @@ onBeforeUnmount(() => {
       @mouseleave="
         () => {
           emit('hover', { isHovering: false, id: collection.id });
+        }
+      "
+      @focus="
+        () => {
+          emit('hover', { isHovering: true, id: collection.id });
         }
       "
       @blur="
@@ -349,3 +354,6 @@ onBeforeUnmount(() => {
   right: 0rem;
 }
 </style>
+
+
+

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Emitter } from "mitt";
-import { inject } from "vue";
+import { inject, type CSSProperties } from "vue";
 import { useI18n } from "vue-i18n";
 import type { SaveSchema, StateSchema } from "@/__generated__";
 import type { DetailedRom } from "@/stores/roms";
@@ -22,7 +22,7 @@ const props = withDefaults(
     showHoverActions?: boolean;
     showCloseButton?: boolean;
     scopes?: string[];
-    cardStyle?: Record<string, any>;
+    cardStyle?: CSSProperties;
     transformScale?: boolean;
   }>(),
   {
@@ -167,5 +167,6 @@ function handleDelete(event: Event) {
     </v-card>
   </v-hover>
 </template>
+
 
 

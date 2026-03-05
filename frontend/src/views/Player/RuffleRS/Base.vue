@@ -156,9 +156,7 @@ onMounted(async () => {
               <v-col>
                 <v-card-title class="text-subtitle-1 pa-0 text-uppercase">
                   <v-icon class="mr-2"> mdi-palette </v-icon>
-                  <label for="background-color-input">{{
-                    t("play.select-background-color")
-                  }}</label>
+                  <span>{{ t("play.select-background-color") }}</span>
                 </v-card-title>
               </v-col>
               <v-col class="d-flex justify-end">
@@ -167,6 +165,7 @@ onMounted(async () => {
                   id="background-color-input"
                   type="color"
                   class="h-100 w-50 text-right"
+                  :aria-label="t('play.select-background-color')"
                   :title="t('play.select-background-color')"
                   @change="onBackgroundColorChange"
                 />
@@ -278,3 +277,5 @@ onMounted(async () => {
   }
 }
 </style>
+
+

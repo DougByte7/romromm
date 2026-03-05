@@ -611,9 +611,11 @@ onUnmounted(() => {
                     'ring-2 ring-white/30 rounded-md px-1 -translate-y-0.5':
                       selectedZone === 'description',
                   }"
+                  role="button"
                   tabindex="0"
                   @click="openDescription()"
                   @keydown.enter="openDescription()"
+                  @keydown.space.prevent="openDescription()"
                 >
                   {{ rom.summary }}
                 </div>
@@ -1072,3 +1074,5 @@ onUnmounted(() => {
   }
 }
 </style>
+
+

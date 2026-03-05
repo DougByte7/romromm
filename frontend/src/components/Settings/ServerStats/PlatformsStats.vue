@@ -17,14 +17,14 @@ const orderBy = ref<"name" | "size" | "count">("name");
 
 const sortedPlatforms = computed(() => {
   if (orderBy.value === "size") {
-    return allPlatforms.value.sort(
+    return allPlatforms.value.toSorted(
       (a, b) => Number(b.fs_size_bytes) - Number(a.fs_size_bytes),
     );
   }
   if (orderBy.value === "count") {
-    return allPlatforms.value.sort((a, b) => b.rom_count - a.rom_count);
+    return allPlatforms.value.toSorted((a, b) => b.rom_count - a.rom_count);
   }
-  return allPlatforms.value.sort((a, b) =>
+  return allPlatforms.value.toSorted((a, b) =>
     a.display_name.localeCompare(b.display_name, undefined, {
       sensitivity: "base",
     }),
@@ -111,3 +111,5 @@ function getPlatformPercentage(
     </template>
   </RSection>
 </template>
+
+

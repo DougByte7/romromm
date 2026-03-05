@@ -10,7 +10,7 @@ interface CacheEntry {
 class CacheService {
   private cache: Cache | null = null;
   private pendingRequests = new Map<string, Promise<AxiosResponse>>();
-  private backgroundCallbacks = new Map<string, (data: any) => void>();
+  private backgroundCallbacks = new Map<string, (data: unknown) => void>();
   private readonly CACHE_NAME = "romm-api-cache";
   private enableExperimentalCache = useLocalStorage(
     "settings.enableExperimentalCache",
@@ -91,7 +91,7 @@ class CacheService {
     // Check cache first
     const cachedEntry = await this.getCachedResponse(cacheKey);
     if (cachedEntry) {
-      this.backgroundCallbacks.set(cacheKey, onBackgroundUpdate);
+      this.backgroundCallbacks.set(cacheKey, onBackgroundUpdate as (data: unknown) => void);
 
       // Trigger background update
       this.makeRequest<T>(cacheKey, config);
@@ -183,3 +183,5 @@ const cacheService = new CacheService();
 cacheService.init();
 
 export default cacheService;
+
+

@@ -15,9 +15,12 @@ const router = useRouter();
 // Valid tab values
 const validTabs = ["mapping", "excluded", "missing"] as const;
 
+const isValidTab = (value: unknown): value is (typeof validTabs)[number] =>
+  typeof value === "string" && validTabs.includes(value as (typeof validTabs)[number]);
+
 // Initialize tab from query parameter or default to "config"
 const tab = ref<"mapping" | "excluded" | "missing">(
-  validTabs.includes(route.query.tab as any)
+  isValidTab(route.query.tab)
     ? (route.query.tab as "mapping" | "excluded" | "missing")
     : "mapping",
 );
@@ -38,7 +41,7 @@ watch(tab, (newTab) => {
 watch(
   () => route.query.tab,
   (newTab) => {
-    if (newTab && validTabs.includes(newTab as any) && tab.value !== newTab) {
+    if (isValidTab(newTab) && tab.value !== newTab) {
       tab.value = newTab as "mapping" | "excluded" | "missing";
     }
   },
@@ -111,3 +114,6 @@ watch(
     </v-col>
   </v-row>
 </template>
+
+
+

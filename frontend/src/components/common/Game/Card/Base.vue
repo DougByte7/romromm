@@ -457,9 +457,12 @@ onBeforeUnmount(() => {
                 loop
                 playsinline
                 preload="none"
-              />
+              >
+                <track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT" />
+              </video>
               <img
                 src="/assets/default/miximage.png"
+                alt="Mix overlay"
                 style="z-index: 1"
                 class="position-relative"
               />
@@ -540,3 +543,7 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 </style>
+
+
+
+

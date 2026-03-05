@@ -13,7 +13,7 @@ class CachedApiService {
   private createRequestConfig(
     method: Method,
     url: string,
-    params?: any,
+    params?: Record<string, unknown>,
     headers?: AxiosHeaders,
   ): AxiosRequestConfig {
     return {
@@ -168,8 +168,8 @@ class CachedApiService {
     return cacheService.request<GetRomsResponse>(config, onBackgroundUpdate);
   }
 
-  private async clearRomsCache(params: any) {
-    const queryString = params ? new URLSearchParams(params).toString() : "";
+  private async clearRomsCache(params: Record<string, string | number | boolean>) {
+    const queryString = params ? new URLSearchParams(params as Record<string, string>).toString() : "";
     await cacheService.clearCacheForPattern(`/roms?${queryString}`);
   }
 
@@ -205,3 +205,4 @@ class CachedApiService {
 }
 
 export default new CachedApiService();
+

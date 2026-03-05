@@ -101,8 +101,8 @@ async function updatePlatformMapping(
         color: "green",
         timeout: 2000,
       });
-    } catch (e: any) {
-      const { response, message } = e || {};
+    } catch (e: unknown) {
+      const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
       emitter?.emit("snackbarShow", {
         msg: t("settings.unable-to-delete-platform-mapping", {
           detail: response?.data?.detail || response?.statusText || message,
@@ -126,8 +126,8 @@ async function updatePlatformMapping(
         color: "green",
         timeout: 2000,
       });
-    } catch (e: any) {
-      const { response, message } = e || {};
+    } catch (e: unknown) {
+      const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
       emitter?.emit("snackbarShow", {
         msg: t("settings.unable-to-create-platform-mapping", {
           detail: response?.data?.detail || response?.statusText || message,
@@ -151,8 +151,8 @@ async function updatePlatformMapping(
         color: "green",
         timeout: 2000,
       });
-    } catch (e: any) {
-      const { response, message } = e || {};
+    } catch (e: unknown) {
+      const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
       emitter?.emit("snackbarShow", {
         msg: t("settings.unable-to-update-platform-mapping", {
           detail: response?.data?.detail || response?.statusText || message,
@@ -177,8 +177,8 @@ async function updatePlatformMapping(
         color: "green",
         timeout: 2000,
       });
-    } catch (e: any) {
-      const { response, message } = e || {};
+    } catch (e: unknown) {
+      const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
       emitter?.emit("snackbarShow", {
         msg: t("settings.unable-to-update-platform-mapping", {
           detail: response?.data?.detail || response?.statusText || message,
@@ -203,8 +203,8 @@ async function updatePlatformMapping(
         color: "green",
         timeout: 2000,
       });
-    } catch (e: any) {
-      const { response, message } = e || {};
+    } catch (e: unknown) {
+      const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
       emitter?.emit("snackbarShow", {
         msg: t("settings.unable-to-update-platform-mapping", {
           detail: response?.data?.detail || response?.statusText || message,
@@ -251,8 +251,8 @@ async function updateMappingType(
       color: "green",
       timeout: 2000,
     });
-  } catch (e: any) {
-    const { response, message } = e || {};
+  } catch (e: unknown) {
+    const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
     emitter?.emit("snackbarShow", {
       msg: t("settings.unable-to-update-platform-mapping", {
         detail: response?.data?.detail || response?.statusText || message,
@@ -273,8 +273,8 @@ onMounted(async () => {
     .then(({ data }) => {
       supportedPlatforms.value = data || [];
     })
-    .catch((e: any) => {
-      const { response, message } = e || {};
+    .catch((e: unknown) => {
+      const { response, message } = (e as { response?: { data?: { detail?: string }; statusText?: string }; message?: string }) || {};
       emitter?.emit("snackbarShow", {
         msg: t("settings.unable-to-get-supported-platforms", {
           detail: response?.data?.detail || response?.statusText || message,
@@ -486,3 +486,5 @@ onMounted(async () => {
     </v-data-table-virtual>
   </template>
 </template>
+
+

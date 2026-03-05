@@ -44,6 +44,9 @@ const validTabs = [
   "relatedgames",
 ] as const;
 
+const isValidTab = (value: unknown): value is (typeof validTabs)[number] =>
+  typeof value === "string" && validTabs.includes(value as (typeof validTabs)[number]);
+
 // Initialize tab from query parameter or default to "details"
 const tab = ref<
   | "details"
@@ -55,7 +58,7 @@ const tab = ref<
   | "screenshots"
   | "relatedgames"
 >(
-  validTabs.includes(route.query.tab as any)
+  isValidTab(route.query.tab)
     ? (route.query.tab as
         | "details"
         | "manual"
@@ -130,7 +133,7 @@ watch(tab, (newTab) => {
 watch(
   () => route.query.tab,
   (newTab) => {
-    if (newTab && validTabs.includes(newTab as any)) {
+    if (isValidTab(newTab)) {
       if (tab.value !== newTab && typeof newTab === "string") {
         tab.value = newTab as typeof tab.value;
       }
@@ -303,3 +306,7 @@ watch(
   margin-top: -230px;
 }
 </style>
+
+
+
+

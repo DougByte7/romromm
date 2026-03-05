@@ -59,7 +59,7 @@ const otherUsersPublicNotes = computed(() => {
 
 const notesList = computed(() => {
   // Combine current user's notes with other users' public notes
-  return [...currentUserNotes.value, ...otherUsersPublicNotes.value].sort(
+  return [...currentUserNotes.value, ...otherUsersPublicNotes.value].toSorted(
     (a, b) => a.title.localeCompare(b.title),
   );
 });
@@ -607,4 +607,5 @@ watch(
   padding: 0px !important;
 }
 </style>
+
 

@@ -170,7 +170,6 @@ function closeDialog() {
                 variant="outlined"
                 required
                 hide-details
-                autofocus
                 @keyup.enter="addExclusion"
               >
                 <template #prepend-inner>
@@ -203,3 +202,5 @@ function closeDialog() {
     </template>
   </RDialog>
 </template>
+
+

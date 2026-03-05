@@ -367,10 +367,10 @@ async function loadLibraryInfo() {
     selectedPlatforms.value = [
       ...(libraryInfo.value.existing_platforms.map((p) => p.fs_slug) || []),
     ];
-  } catch (error: any) {
+  } catch (error: unknown) {
     emitter?.emit("snackbarShow", {
       msg: `Failed to load library info: ${
-        error.response?.data?.detail || error.message
+        (error as { response?: { data?: { detail?: string } }; message?: string }).response?.data?.detail || (error as { message?: string }).message
       }`,
       icon: "mdi-close-circle",
       color: "red",
@@ -396,10 +396,10 @@ async function finishWizard() {
         icon: "mdi-check-circle",
         color: "success",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       emitter?.emit("snackbarShow", {
         msg: `Failed to create platform folders: ${
-          error.response?.data?.detail || error.message
+          (error as { response?: { data?: { detail?: string } }; message?: string }).response?.data?.detail || (error as { message?: string }).message
         }`,
         icon: "mdi-close-circle",
         color: "red",
@@ -868,3 +868,4 @@ onMounted(() => {
   padding: 0px !important;
 }
 </style>
+
