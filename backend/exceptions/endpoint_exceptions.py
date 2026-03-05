@@ -47,9 +47,9 @@ class CollectionAlreadyExistsException(Exception):
     def __init__(self, name):
         self.message = f"Collection with name '{name}' already exists"
         super().__init__(self.message)
-        log.critical(self.message)
+        log.error(self.message)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=self.message
+            status_code=status.HTTP_409_CONFLICT, detail=self.message
         )
 
     def __repr__(self) -> str:
