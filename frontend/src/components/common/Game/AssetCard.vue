@@ -40,9 +40,6 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-function isState(asset: SaveSchema | StateSchema): asset is StateSchema {
-  return "screenshot" in asset;
-}
 
 function handleClick(event: MouseEvent) {
   emit("click", event);
@@ -170,3 +167,5 @@ function handleDelete(event: Event) {
     </v-card>
   </v-hover>
 </template>
+
+

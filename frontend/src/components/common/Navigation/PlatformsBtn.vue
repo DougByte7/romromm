@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import { ROUTES } from "@/plugins/router";
 import storeNavigation from "@/stores/navigation";
 
 withDefaults(
@@ -34,14 +35,14 @@ const { activePlatformsDrawer } = storeToRefs(navigationStore);
     @click="navigationStore.switchActivePlatformsDrawer"
   >
     <div class="d-flex flex-column align-center">
-      <v-icon :color="$route.name == 'platform' ? 'primary' : ''">
+      <v-icon :color="$route.name === ROUTES.PLATFORM ? 'primary' : ''">
         mdi-controller
       </v-icon>
       <v-expand-transition>
         <span
           v-if="withTag"
           class="text-caption text-center"
-          :class="{ 'text-primary': $route.name == 'platform' }"
+          :class="{ 'text-primary': $route.name === ROUTES.PLATFORM }"
           >{{ t("common.platforms") }}</span
         >
       </v-expand-transition>

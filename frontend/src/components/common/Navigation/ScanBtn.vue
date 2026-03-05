@@ -50,7 +50,11 @@ const processRomUpdates = debounce(() => {
 
     if (romsStore.currentPlatform?.id === rom.platform_id) {
       const existingRom = romsStore.filteredRoms.find((r) => r.id === rom.id);
-      existingRom ? romsStore.update(rom) : romsStore.add([rom]);
+      if (existingRom) {
+        romsStore.update(rom);
+      } else {
+        romsStore.add([rom]);
+      }
     }
 
     let scannedPlatform = scanningPlatforms.value.find(
@@ -192,3 +196,6 @@ onBeforeUnmount(() => {
     </div>
   </v-btn>
 </template>
+
+
+

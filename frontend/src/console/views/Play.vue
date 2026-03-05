@@ -11,7 +11,6 @@ import {
 } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
-import type { FirmwareSchema } from "@/__generated__";
 import type { DetailedRomSchema } from "@/__generated__/models/DetailedRomSchema";
 import NavigationText from "@/console/components/NavigationText.vue";
 import { useInputScope } from "@/console/composables/useInputScope";
@@ -887,3 +886,4 @@ onBeforeUnmount(() => {
   display: none;
 }
 </style>
+

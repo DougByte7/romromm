@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import { debounce } from "lodash";
-import { MdEditor, MdPreview } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { storeToRefs } from "pinia";
-import { ref, watch, onUnmounted } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
-import { useDisplay, useTheme } from "vuetify";
+import { useRoute, useRouter, type LocationQueryRaw } from "vue-router";
+import { useDisplay } from "vuetify";
 import type { RomUserStatus } from "@/__generated__";
 import MultiNoteManager from "@/components/Details/MultiNoteManager.vue";
 import RetroAchievements from "@/components/Details/RetroAchievements.vue";
-import RSection from "@/components/common/RSection.vue";
 import romApi from "@/services/api/rom";
 import storeAuth from "@/stores/auth";
 import type { DetailedRom } from "@/stores/roms";
 import {
-  getTextForStatus,
   getEmojiForStatus,
   getI18nKeyForStatus,
 } from "@/utils";
@@ -29,7 +26,7 @@ const router = useRouter();
 const validTabs = ["status", "ra", "notes"] as const;
 
 // Helper function to update URL with new query parameters
-const updateQuery = (updates: Record<string, any>) => {
+const updateQuery = (updates: LocationQueryRaw) => {
   router.replace({
     path: route.path,
     query: { ...route.query, ...updates },
@@ -39,7 +36,8 @@ const updateQuery = (updates: Record<string, any>) => {
 // Helper function to remove subtab from URL
 const removeSubtab = () => {
   if (route.query.subtab) {
-    const { subtab, ...queryWithoutSubtab } = route.query;
+    const queryWithoutSubtab = { ...route.query };
+    delete queryWithoutSubtab.subtab;
     router.replace({
       path: route.path,
       query: queryWithoutSubtab,
@@ -48,13 +46,14 @@ const removeSubtab = () => {
 };
 
 // Initialize sub-tab from query parameter or default to "status"
-const tab = ref<"status" | "ra" | "notes">(
-  validTabs.includes(route.query.subtab as any)
-    ? (route.query.subtab as "status" | "ra" | "notes")
-    : "status",
+type PersonalTab = (typeof validTabs)[number];
+const isValidTab = (value: unknown): value is PersonalTab =>
+  typeof value === "string" && validTabs.includes(value as PersonalTab);
+
+const tab = ref<PersonalTab>(
+  isValidTab(route.query.subtab) ? route.query.subtab : "status",
 );
 const auth = storeAuth();
-const theme = useTheme();
 const { mdAndUp, mdAndDown, smAndDown } = useDisplay();
 const { scopes } = storeToRefs(auth);
 const romUser = ref(props.rom.rom_user);
@@ -70,8 +69,8 @@ watch(tab, (newSubTab) => {
 watch(
   () => route.query.subtab,
   (newSubTab) => {
-    if (newSubTab && validTabs.includes(newSubTab as any)) {
-      tab.value = newSubTab as "status" | "ra" | "notes";
+    if (isValidTab(newSubTab)) {
+      tab.value = newSubTab;
     }
   },
   { immediate: true },
@@ -371,3 +370,6 @@ watch(
   padding: 0px !important;
 }
 </style>
+
+
+

@@ -54,7 +54,7 @@ const routes = [
         path: "",
         name: ROUTES.SETUP,
         meta: {
-          title: i18n.global.t("login.setup-wizard"),
+          titleKey: "login.setup-wizard",
         },
         component: () => import("@/views/Auth/Setup.vue"),
       },
@@ -68,7 +68,7 @@ const routes = [
         path: "",
         name: ROUTES.LOGIN,
         meta: {
-          title: i18n.global.t("login.login"),
+          titleKey: "login.login",
         },
         component: () => import("@/views/Auth/Login.vue"),
       },
@@ -82,7 +82,7 @@ const routes = [
         path: "",
         name: ROUTES.RESET_PASSWORD,
         meta: {
-          title: i18n.global.t("login.reset-password"),
+          titleKey: "login.reset-password",
         },
         component: () => import("@/views/Auth/ResetPassword.vue"),
       },
@@ -96,7 +96,7 @@ const routes = [
         path: "",
         name: ROUTES.REGISTER,
         meta: {
-          title: i18n.global.t("login.register"),
+          titleKey: "login.register",
         },
         component: () => import("@/views/Auth/Register.vue"),
       },
@@ -114,7 +114,7 @@ const routes = [
         path: "",
         name: ROUTES.HOME,
         meta: {
-          title: i18n.global.t("settings.home"),
+          titleKey: "settings.home",
         },
         component: () => import("@/views/Home.vue"),
       },
@@ -122,7 +122,7 @@ const routes = [
         path: "search",
         name: ROUTES.SEARCH,
         meta: {
-          title: i18n.global.t("common.search"),
+          titleKey: "common.search",
         },
         component: () => import("@/views/Gallery/Search.vue"),
       },
@@ -185,7 +185,7 @@ const routes = [
         path: "scan",
         name: ROUTES.SCAN,
         meta: {
-          title: i18n.global.t("scan.scan"),
+          titleKey: "scan.scan",
         },
         component: () => import("@/views/Scan.vue"),
       },
@@ -193,7 +193,7 @@ const routes = [
         path: "patcher",
         name: ROUTES.PATCHER,
         meta: {
-          title: i18n.global.t("common.patcher"),
+          titleKey: "common.patcher",
         },
         component: () => import("@/views/Patcher.vue"),
       },
@@ -206,7 +206,7 @@ const routes = [
         path: "user-interface",
         name: ROUTES.USER_INTERFACE,
         meta: {
-          title: i18n.global.t("common.user-interface"),
+          titleKey: "common.user-interface",
         },
         component: () => import("@/views/Settings/UserInterface.vue"),
       },
@@ -214,7 +214,7 @@ const routes = [
         path: "library-management",
         name: ROUTES.LIBRARY_MANAGEMENT,
         meta: {
-          title: i18n.global.t("common.library-management"),
+          titleKey: "common.library-management",
         },
         component: () => import("@/views/Settings/LibraryManagement.vue"),
       },
@@ -222,7 +222,7 @@ const routes = [
         path: "metadata-sources",
         name: ROUTES.METADATA_SOURCES,
         meta: {
-          title: i18n.global.t("scan.metadata-sources"),
+          titleKey: "scan.metadata-sources",
         },
         component: () => import("@/views/Settings/MetadataSources.vue"),
       },
@@ -230,7 +230,7 @@ const routes = [
         path: "administration",
         name: ROUTES.ADMINISTRATION,
         meta: {
-          title: i18n.global.t("common.administration"),
+          titleKey: "common.administration",
         },
         component: () => import("@/views/Settings/Administration.vue"),
       },
@@ -238,7 +238,7 @@ const routes = [
         path: "server-stats",
         name: ROUTES.SERVER_STATS,
         meta: {
-          title: i18n.global.t("common.server-stats"),
+          titleKey: "common.server-stats",
         },
         component: () => import("@/views/Settings/ServerStats.vue"),
       },
@@ -299,7 +299,7 @@ interface RoutePermissions {
 }
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     // If savedPosition is available, it's a popstate navigation (back/forward)
@@ -377,8 +377,10 @@ router.beforeEach(async (to, _from, next) => {
       return next({ name: ROUTES.NOT_FOUND });
     }
 
-    if (to.meta.title) {
-      document.title = i18n.global.t(to.meta.title as string);
+    if (to.meta.titleKey) {
+      document.title = i18n.global.t(to.meta.titleKey as string);
+    } else if (to.meta.title) {
+      document.title = to.meta.title as string;
     } else {
       document.title = "Romromm";
     }

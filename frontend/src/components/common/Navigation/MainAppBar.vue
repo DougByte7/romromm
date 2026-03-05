@@ -16,6 +16,7 @@ import SearchBtn from "@/components/common/Navigation/SearchBtn.vue";
 import SettingsDrawer from "@/components/common/Navigation/SettingsDrawer.vue";
 import UploadBtn from "@/components/common/Navigation/UploadBtn.vue";
 import UserBtn from "@/components/common/Navigation/UserBtn.vue";
+import { UI_SETTINGS_KEYS } from "@/composables/useUISettings";
 import storeNavigation from "@/stores/navigation";
 
 const { smAndDown } = useDisplay();
@@ -23,8 +24,8 @@ const navigationStore = storeNavigation();
 const { mainBarCollapsed } = storeToRefs(navigationStore);
 
 const mainBarCollapsedStorage = useLocalStorage(
-  "settings.mainBarCollapsed",
-  false,
+  UI_SETTINGS_KEYS.mainBarCollapsed.key,
+  UI_SETTINGS_KEYS.mainBarCollapsed.default,
 );
 
 function collapse() {

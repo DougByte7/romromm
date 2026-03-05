@@ -15,8 +15,6 @@ import romApi from "@/services/api/rom";
 import storeAuth from "@/stores/auth";
 import storeCollections from "@/stores/collections";
 import storeDownload from "@/stores/download";
-import storeGalleryFilter from "@/stores/galleryFilter";
-import storePlatforms from "@/stores/platforms";
 import storeRoms, { type SimpleRom } from "@/stores/roms";
 import type { Events } from "@/types/emitter";
 import {
@@ -43,9 +41,7 @@ const romsStore = storeRoms();
 const { filteredRoms, selectedRoms, fetchingRoms, fetchTotalRoms } =
   storeToRefs(romsStore);
 const auth = storeAuth();
-const galleryFilterStore = storeGalleryFilter();
 const collectionsStore = storeCollections();
-const platformsStore = storePlatforms();
 const emitter = inject<Emitter<Events>>("emitter");
 
 const HEADERS = [
@@ -493,3 +489,4 @@ function updateOptions({ sortBy }: { sortBy: SortBy }) {
   display: none;
 }
 </style>
+

@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useI18n } from "vue-i18n";
 import type { RomFileSchema } from "@/__generated__";
 import { formatBytes } from "@/utils";
 
-const { t } = useI18n();
 
 const props = defineProps<{
   item: RomFileSchema;
@@ -44,3 +42,5 @@ const fileInfo = ref([
     </v-chip>
   </template>
 </template>
+
+

@@ -54,7 +54,7 @@ function closeDialog() {
         no-gutters
       >
         <v-col
-          v-for="state in rom.user_states"
+          v-for="state in rom.user_states" :key="state.id"
           class="pa-1 align-self-end"
           cols="6"
           md="4"
@@ -85,3 +85,4 @@ function closeDialog() {
     </template>
   </RDialog>
 </template>
+

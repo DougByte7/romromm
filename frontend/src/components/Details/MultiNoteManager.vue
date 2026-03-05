@@ -203,7 +203,7 @@ async function deleteNote() {
 // Watch for prop changes to update local state
 watch(
   () => props.rom.all_user_notes,
-  (newNotes) => {
+  () => {
     // Clean up editing states for notes that no longer exist
     const currentTitles = new Set(currentUserNotes.value.map((n) => n.title));
     Object.keys(editingNotes).forEach((title) => {
@@ -607,3 +607,4 @@ watch(
   padding: 0px !important;
 }
 </style>
+

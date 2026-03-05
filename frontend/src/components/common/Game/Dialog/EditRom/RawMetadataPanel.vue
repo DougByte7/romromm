@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Emitter } from "mitt";
-import { ref, computed, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { inject } from "vue";
 import type { UpdateRom } from "@/services/api/rom";
 import type { Events } from "@/types/emitter";
@@ -36,7 +36,7 @@ const validateJson = (value: string): boolean | string => {
   try {
     JSON.parse(value);
     return true;
-  } catch (error) {
+  } catch {
     return "Invalid JSON format";
   }
 };
@@ -74,7 +74,7 @@ const saveMetadata = () => {
 
     emit("update:rom", updatedRom);
     isEditing.value = false;
-  } catch (error) {
+  } catch {
     emitter?.emit("snackbarShow", {
       msg: "Invalid JSON format",
       icon: "mdi-close-circle",
@@ -137,3 +137,4 @@ const saveMetadata = () => {
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
+

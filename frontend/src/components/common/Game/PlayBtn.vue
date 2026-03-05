@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Emitter } from "mitt";
 import { storeToRefs } from "pinia";
-import { computed, inject, useAttrs, ref } from "vue";
+import { computed, inject, useAttrs } from "vue";
 import { useRouter } from "vue-router";
 import {
   ANIMATION_DELAY,
@@ -10,7 +10,7 @@ import {
 import { ROUTES } from "@/plugins/router";
 import storeConfig from "@/stores/config";
 import storeHeartbeat from "@/stores/heartbeat";
-import storeRoms, { type SimpleRom } from "@/stores/roms";
+import { type SimpleRom } from "@/stores/roms";
 import type { Events } from "@/types/emitter";
 import { isEJSEmulationSupported, isRuffleEmulationSupported } from "@/utils";
 
@@ -18,7 +18,6 @@ const props = defineProps<{ rom: SimpleRom; iconEmbedded?: boolean }>();
 const attrs = useAttrs();
 const configStore = storeConfig();
 const heartbeatStore = storeHeartbeat();
-const romsStore = storeRoms();
 const router = useRouter();
 const { config } = storeToRefs(configStore);
 const { value: heartbeat } = storeToRefs(heartbeatStore);
@@ -92,3 +91,5 @@ async function goToPlayer(rom: SimpleRom) {
     </v-btn>
   </template>
 </template>
+
+

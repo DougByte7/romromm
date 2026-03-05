@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import { ROUTES } from "@/plugins/router";
 import storeNavigation from "@/stores/navigation";
 
 withDefaults(
@@ -31,14 +32,14 @@ const navigationStore = storeNavigation();
     @click="navigationStore.goSearch"
   >
     <div class="d-flex flex-column align-center">
-      <v-icon :color="$route.name == 'search' ? 'primary' : ''">
+      <v-icon :color="$route.name === ROUTES.SEARCH ? 'primary' : ''">
         mdi-magnify
       </v-icon>
       <v-expand-transition>
         <span
           v-if="withTag"
           class="text-caption text-center"
-          :class="{ 'text-primary': $route.name == 'search' }"
+          :class="{ 'text-primary': $route.name === ROUTES.SEARCH }"
           >{{ t("common.search") }}</span
         >
       </v-expand-transition>

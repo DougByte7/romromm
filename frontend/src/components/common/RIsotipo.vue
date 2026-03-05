@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
 withDefaults(defineProps<{ size?: number; avatar?: boolean }>(), {
   size: 40,
   avatar: true,
@@ -28,3 +26,4 @@ withDefaults(defineProps<{ size?: number; avatar?: boolean }>(), {
   filter: drop-shadow(0px 0px 2px rgba(var(--v-theme-primary)));
 }
 </style>
+

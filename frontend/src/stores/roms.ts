@@ -6,6 +6,7 @@ import type {
   SimpleRomSchema,
   SearchRomSchema,
 } from "@/__generated__/";
+import type { GetRomsParams } from "@/services/api/rom";
 import type { CustomLimitOffsetPage_SimpleRomSchema_ as GetRomsResponse } from "@/__generated__/models/CustomLimitOffsetPage_SimpleRomSchema_";
 import cachedApiService from "@/services/cache/api";
 import {
@@ -394,4 +395,6 @@ export default defineStore("roms", {
     },
   },
 });
+
+
 

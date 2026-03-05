@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type {
-  ScanStats,
-  ConversionStats,
   CleanupStats,
-  UpdateStats,
-  ScanTaskStatusResponse,
-  ConversionTaskStatusResponse,
   CleanupTaskStatusResponse,
+  ConversionStats,
+  ConversionTaskStatusResponse,
+  ScanStats,
+  ScanTaskStatusResponse,
+  UpdateStats,
   UpdateTaskStatusResponse,
 } from "@/__generated__";
 import { type TaskStatusResponse } from "@/utils/tasks";
@@ -20,28 +20,36 @@ const props = defineProps<{
   task: TaskStatusResponse;
 }>();
 
+const taskMeta = computed(
+  () =>
+    props.task.meta as
+      | {
+          scan_stats?: ScanStats;
+          conversion_stats?: ConversionStats;
+          cleanup_stats?: CleanupStats;
+          update_stats?: UpdateStats;
+        }
+      | undefined,
+);
+
 const scanStats = computed((): ScanStats | null => {
   if (props.task.task_type !== "scan") return null;
-  // @ts-ignore
-  return props.task.meta?.scan_stats || null;
+  return taskMeta.value?.scan_stats ?? null;
 });
 
 const conversionStats = computed((): ConversionStats | null => {
   if (props.task.task_type !== "conversion") return null;
-  // @ts-ignore
-  return props.task.meta?.conversion_stats || null;
+  return taskMeta.value?.conversion_stats ?? null;
 });
 
 const cleanupStats = computed((): CleanupStats | null => {
   if (props.task.task_type !== "cleanup") return null;
-  // @ts-ignore
-  return props.task.meta?.cleanup_stats || null;
+  return taskMeta.value?.cleanup_stats ?? null;
 });
 
 const updateStats = computed((): UpdateStats | null => {
   if (props.task.task_type !== "update") return null;
-  // @ts-ignore
-  return props.task.meta?.update_stats || null;
+  return taskMeta.value?.update_stats ?? null;
 });
 
 const hasDetailedStats = computed(() => {

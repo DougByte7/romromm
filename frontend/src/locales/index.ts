@@ -1,11 +1,11 @@
 import { createI18n } from "vue-i18n";
 
 function loadLocales() {
-  const locales = import.meta.glob("./*/**/*.json");
+  const locales = import.meta.glob("./*/**/*.json", { eager: true });
   const messages: {
     [key: string]: { [namespace: string]: Record<string, string> };
   } = {};
-  Object.keys(locales).forEach(async (key) => {
+  Object.keys(locales).forEach((key) => {
     const matched = key.match(/\.\/([A-Za-z0-9-_]+)\/([A-Za-z0-9-_]+)\.json$/i);
     if (matched && matched.length > 2) {
       const locale = matched[1];
@@ -13,7 +13,7 @@ function loadLocales() {
       if (!messages[locale]) {
         messages[locale] = {};
       }
-      const localeModule = (await locales[key]()) as {
+      const localeModule = locales[key] as {
         default: Record<string, string>;
       };
       messages[locale][namespace] = localeModule.default;
@@ -37,3 +37,4 @@ const i18n = createI18n({
 });
 
 export default i18n;
+

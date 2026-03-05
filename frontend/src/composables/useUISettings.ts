@@ -1,7 +1,7 @@
-import { useLocalStorage } from "@vueuse/core";
+import { useDebounceFn, useLocalStorage } from "@vueuse/core";
 import type { RemovableRef } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { watch, ref } from "vue";
+import { ref, watch } from "vue";
 import type { UserSchema } from "@/__generated__";
 import userApi from "@/services/api/user";
 import storeAuth from "@/stores/auth";
@@ -12,6 +12,9 @@ export const UI_SETTINGS_KEYS = {
 
   // Theme
   theme: { key: "settings.theme", default: "auto" },
+
+  // Navigation
+  mainBarCollapsed: { key: "ui.mainBarCollapsed", default: false },
 
   // Home section
   showStats: { key: "settings.showStats", default: true },
@@ -98,9 +101,9 @@ function createUISettings() {
     const backendSettings = userWithSettings.ui_settings;
 
     // Sync backend settings to localStorage
-    Object.entries(localStorageRefs).forEach(([key, ref]) => {
+    Object.entries(localStorageRefs).forEach(([key, storageRef]) => {
       if (key in backendSettings) {
-        ref.value = backendSettings[key as UISettingsKey];
+        storageRef.value = backendSettings[key as UISettingsKey];
       }
     });
 
@@ -113,7 +116,10 @@ function createUISettings() {
   // Collect current settings from localStorage
   function collectSettings(): Record<string, unknown> {
     return Object.fromEntries(
-      Object.entries(localStorageRefs).map(([key, ref]) => [key, ref.value]),
+      Object.entries(localStorageRefs).map(([key, storageRef]) => [
+        key,
+        storageRef.value,
+      ]),
     );
   }
 
@@ -142,11 +148,15 @@ function createUISettings() {
     }
   };
 
+  const debouncedSaveUISettings = useDebounceFn(() => {
+    void saveUISettings();
+  }, 400);
+
   // Watch all localStorage refs for changes (only set up once)
-  Object.values(localStorageRefs).forEach((ref) => {
-    watch(ref, () => {
+  Object.values(localStorageRefs).forEach((storageRef) => {
+    watch(storageRef, () => {
       if (!isSyncing.value) {
-        saveUISettings();
+        debouncedSaveUISettings();
       }
     });
   });
@@ -165,7 +175,7 @@ function createUISettings() {
 
   return {
     ...localStorageRefs,
-    initialize: initialize,
+    initialize,
     saveUISettings: () => saveUISettings(),
   };
 }
