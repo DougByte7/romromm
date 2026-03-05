@@ -46,8 +46,9 @@ function closeDialog() {
           </v-hover>
         </v-col>
         <v-col class="pa-4" cols="6">
-          <v-icon class="mr-2"> mdi-code-braces </v-icon
-          ><span>Source code</span>
+          <v-icon class="mr-2">
+            mdi-code-braces
+          </v-icon><span>Source code</span>
           <v-divider class="my-2" />
           <v-hover v-slot="{ isHovering, props }">
             <a
@@ -59,15 +60,15 @@ function closeDialog() {
               :class="{
                 'text-secondary': isHovering,
               }"
-              >Github</a
-            >
+            >Github</a>
           </v-hover>
         </v-col>
       </v-row>
       <v-row class="align-center pa-4" no-gutters>
         <v-col class="pa-4" cols="6">
-          <v-icon class="mr-2"> mdi-file-document-outline </v-icon
-          ><span>Documentation</span>
+          <v-icon class="mr-2">
+            mdi-file-document-outline
+          </v-icon><span>Documentation</span>
           <v-divider class="my-2" />
           <v-hover v-slot="{ isHovering, props }">
             <a
@@ -79,13 +80,13 @@ function closeDialog() {
               :class="{
                 'text-secondary': isHovering,
               }"
-              >Docs</a
-            >
+            >Docs</a>
           </v-hover>
         </v-col>
         <v-col class="pa-4" cols="6">
-          <v-icon class="mr-2"> mdi-account-group </v-icon
-          ><span>Community</span>
+          <v-icon class="mr-2">
+            mdi-account-group
+          </v-icon><span>Community</span>
           <v-divider class="my-2" />
           <v-hover v-slot="{ isHovering, props }">
             <a
@@ -97,8 +98,7 @@ function closeDialog() {
               :class="{
                 'text-secondary': isHovering,
               }"
-              >Discord</a
-            >
+            >Discord</a>
           </v-hover>
         </v-col>
       </v-row>

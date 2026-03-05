@@ -61,8 +61,9 @@ function closeDialog() {
             variant="outlined"
             :value="role"
           >
-            <v-icon size="small" class="mr-2"> {{ getRoleIcon(role) }} </v-icon
-            >{{ role.charAt(0).toUpperCase() + role.slice(1) }}
+            <v-icon size="small" class="mr-2">
+              {{ getRoleIcon(role) }}
+            </v-icon>{{ role.charAt(0).toUpperCase() + role.slice(1) }}
           </v-btn>
         </v-btn-toggle>
         <v-btn-toggle class="text-primary ma-1" divided>
@@ -71,7 +72,9 @@ function closeDialog() {
             variant="outlined"
             @click="createInviteLink"
           >
-            <v-icon size="small" class="mr-2"> mdi-link </v-icon>Generate
+            <v-icon size="small" class="mr-2">
+              mdi-link
+            </v-icon>Generate
           </v-btn>
         </v-btn-toggle>
       </v-row>

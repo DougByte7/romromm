@@ -120,15 +120,15 @@ const saveMetadata = () => {
         <template v-else>
           <v-btn
             variant="flat"
-            @click="cancelEdit"
             class="text-romm-red bg-toplayer"
+            @click="cancelEdit"
           >
             {{ $t("common.cancel") }}
           </v-btn>
           <v-btn
             variant="flat"
-            @click="saveMetadata"
             class="text-romm-green bg-toplayer"
+            @click="saveMetadata"
           >
             {{ $t("common.save") }}
           </v-btn>

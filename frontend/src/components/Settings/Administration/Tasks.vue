@@ -146,11 +146,13 @@ onUnmounted(() => {
       </v-chip>
       <v-divider class="border-opacity-25 ma-1" />
 
-      <v-row no-gutters v-if="taskStatuses.length === 0">
+      <v-row v-if="taskStatuses.length === 0" no-gutters>
         <v-card elevation="0" class="bg-background ma-3">
           <v-list-item>
             <template #prepend>
-              <v-icon color="grey">mdi-information-outline</v-icon>
+              <v-icon color="grey">
+                mdi-information-outline
+              </v-icon>
             </template>
             <v-list-item-title class="text-grey">
               {{ t("settings.no-tasks-in-history") }}
@@ -158,11 +160,11 @@ onUnmounted(() => {
           </v-list-item>
         </v-card>
       </v-row>
-      <v-row no-gutters v-else>
+      <v-row v-else no-gutters>
         <v-col
-          cols="12"
           v-for="task in taskStatuses"
           :key="`task-${task.task_id}-${task.status}`"
+          cols="12"
         >
           <RunningTaskItem class="ma-1 pa-2" :task="task" />
         </v-col>

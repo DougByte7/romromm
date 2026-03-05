@@ -36,8 +36,8 @@ const { activeCollectionsDrawer } = storeToRefs(navigationStore);
       <v-icon
         :color="
           $route.name == 'collection' ||
-          $route.name == 'virtual-collection' ||
-          $route.name == 'smart-collection'
+            $route.name == 'virtual-collection' ||
+            $route.name == 'smart-collection'
             ? 'primary'
             : ''
         "
@@ -54,8 +54,7 @@ const { activeCollectionsDrawer } = storeToRefs(navigationStore);
               $route.name == 'virtual-collection' ||
               $route.name == 'smart-collection',
           }"
-          >{{ t("common.collections") }}</span
-        >
+        >{{ t("common.collections") }}</span>
       </v-expand-transition>
     </div>
   </v-btn>

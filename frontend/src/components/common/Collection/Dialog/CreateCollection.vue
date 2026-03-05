@@ -201,14 +201,18 @@ function closeDialog() {
                       })
                     "
                   >
-                    <v-icon size="large"> mdi-image-search-outline </v-icon>
+                    <v-icon size="large">
+                      mdi-image-search-outline
+                    </v-icon>
                   </v-btn>
                   <v-btn
                     size="small"
                     class="translucent"
                     @click="triggerFileInput"
                   >
-                    <v-icon size="large"> mdi-pencil </v-icon>
+                    <v-icon size="large">
+                      mdi-pencil
+                    </v-icon>
                     <v-file-input
                       id="file-input"
                       v-model="collection.artwork"

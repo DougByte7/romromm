@@ -7,6 +7,8 @@ import { VitePWA } from "vite-plugin-pwa";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
+process.env.BROWSERSLIST_IGNORE_OLD_DATA ??= "true";
+
 // Vuetify components to preoptimize for faster dev startup
 const VUETIFY_COMPONENTS = [
   "vuetify/components/transitions",
@@ -76,6 +78,19 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       target: "esnext",
+      chunkSizeWarningLimit: 1700,
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (
+            warning.code === "EVAL" &&
+            warning.id?.includes("node_modules/vue3-pdf-app/")
+          ) {
+            return;
+          }
+
+          warn(warning);
+        },
+      },
     },
     plugins: [
       tailwindcss(),
@@ -157,4 +172,7 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
+
+
 

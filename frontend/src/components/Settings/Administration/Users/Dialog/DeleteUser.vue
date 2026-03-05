@@ -68,15 +68,16 @@ function closeDialog() {
                 ? `/assets/romm/assets/${user.avatar_path}?ts=${user.updated_at}`
                 : defaultAvatarPath
             "
-          /> </v-avatar
-        ><span class="text-primary ml-1">{{ user.username }}</span
-        ><span class="ml-1">user. Do you confirm?</span>
+          />
+        </v-avatar><span class="text-primary ml-1">{{ user.username }}</span><span class="ml-1">user. Do you confirm?</span>
       </v-row>
     </template>
     <template #footer>
       <v-row class="justify-center my-2" no-gutters>
         <v-btn-group divided density="compact">
-          <v-btn class="bg-toplayer" @click="closeDialog"> Cancel </v-btn>
+          <v-btn class="bg-toplayer" @click="closeDialog">
+            Cancel
+          </v-btn>
           <v-btn class="bg-toplayer text-romm-red" @click="deleteUser">
             Confirm
           </v-btn>

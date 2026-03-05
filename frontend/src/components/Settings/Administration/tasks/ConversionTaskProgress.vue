@@ -49,7 +49,9 @@ const conversionProgress = computed(() => {
           <div class="font-weight-bold">
             {{ conversionProgress.processed }}
           </div>
-          <div class="text-uppercase">Processed</div>
+          <div class="text-uppercase">
+            Processed
+          </div>
         </div>
       </v-card>
 
@@ -66,7 +68,9 @@ const conversionProgress = computed(() => {
           <div class="font-weight-bold">
             {{ conversionProgress.errors }}
           </div>
-          <div class="text-uppercase">Errors</div>
+          <div class="text-uppercase">
+            Errors
+          </div>
         </div>
       </v-card>
 
@@ -83,7 +87,9 @@ const conversionProgress = computed(() => {
           <div class="font-weight-bold">
             {{ conversionProgress.successRate }}%
           </div>
-          <div class="text-uppercase">Success</div>
+          <div class="text-uppercase">
+            Success
+          </div>
         </div>
       </v-card>
     </div>

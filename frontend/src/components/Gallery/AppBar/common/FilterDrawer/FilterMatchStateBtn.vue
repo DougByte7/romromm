@@ -57,8 +57,10 @@ function setState(state: string | null) {
       variant="outlined"
       @update:model-value="setState"
     >
-      <v-btn value="all" size="small"
-        ><v-icon size="x-large">mdi-cancel</v-icon>
+      <v-btn value="all" size="small">
+        <v-icon size="x-large">
+          mdi-cancel
+        </v-icon>
       </v-btn>
       <v-tooltip
         :text="t('platform.show-matched')"
@@ -67,7 +69,9 @@ function setState(state: string | null) {
       >
         <template #activator="{ props }">
           <v-btn value="matched" size="small" v-bind="props">
-            <v-icon size="x-large">mdi-file-find</v-icon>
+            <v-icon size="x-large">
+              mdi-file-find
+            </v-icon>
           </v-btn>
         </template>
       </v-tooltip>
@@ -78,7 +82,9 @@ function setState(state: string | null) {
       >
         <template #activator="{ props }">
           <v-btn value="unmatched" size="small" v-bind="props">
-            <v-icon size="x-large">mdi-file-find-outline</v-icon>
+            <v-icon size="x-large">
+              mdi-file-find-outline
+            </v-icon>
           </v-btn>
         </template>
       </v-tooltip>

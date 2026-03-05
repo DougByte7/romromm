@@ -56,8 +56,8 @@ onMounted(async () => {
       <v-card
         v-if="
           GITHUB_VERSION &&
-          semver.gt(GITHUB_VERSION, VERSION) &&
-          !latestVersionDismissed
+            semver.gt(GITHUB_VERSION, VERSION) &&
+            !latestVersionDismissed
         "
         class="pa-1 border-selected mx-auto"
         max-width="fit-content"

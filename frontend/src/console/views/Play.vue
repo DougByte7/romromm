@@ -709,7 +709,7 @@ onBeforeUnmount(() => {
         class="select-none"
         draggable="false"
         style="height: 100vh; max-height: 100vh; width: auto; object-fit: cover"
-      />
+      >
     </div>
     <div
       v-if="loaderStatus !== 'loaded'"
@@ -799,13 +799,13 @@ onBeforeUnmount(() => {
             :style="
               focusedExitIndex === i
                 ? {
-                    borderColor: 'var(--console-modal-tile-selected-border)',
-                    backgroundColor: 'var(--console-modal-tile-selected-bg)',
-                  }
+                  borderColor: 'var(--console-modal-tile-selected-border)',
+                  backgroundColor: 'var(--console-modal-tile-selected-bg)',
+                }
                 : {
-                    borderColor: 'var(--console-modal-tile-selected-border)',
-                    backgroundColor: 'var(--console-modal-tile-bg)',
-                  }
+                  borderColor: 'var(--console-modal-tile-selected-border)',
+                  backgroundColor: 'var(--console-modal-tile-bg)',
+                }
             "
             role="button"
             tabindex="0"

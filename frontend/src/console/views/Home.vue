@@ -834,7 +834,7 @@ onUnmounted(() => {
                   :continue-playing="true"
                   :selected="
                     navigationMode === 'continuePlaying' &&
-                    i === continuePlayingIndex
+                      i === continuePlayingIndex
                   "
                   :loaded="true"
                   @click="goGame(g)"
@@ -953,7 +953,7 @@ onUnmounted(() => {
                   :index="i"
                   :selected="
                     navigationMode === 'smartCollections' &&
-                    i === smartCollectionsIndex
+                      i === smartCollectionsIndex
                   "
                   :loaded="true"
                   @click="goSmartCollection(c.id)"
@@ -1013,7 +1013,7 @@ onUnmounted(() => {
                   :index="i"
                   :selected="
                     navigationMode === 'virtualCollections' &&
-                    i === virtualCollectionsIndex
+                      i === virtualCollectionsIndex
                   "
                   :loaded="true"
                   @click="goVirtualCollection(c.id)"
@@ -1042,7 +1042,9 @@ onUnmounted(() => {
           :title="t('console.exit-console-mode') + ' (F1)'"
           @click="exitConsoleMode"
         >
-          <v-icon size="small">mdi-power</v-icon>
+          <v-icon size="small">
+            mdi-power
+          </v-icon>
         </button>
         <button
           class="w-12 h-12 rounded-md cursor-pointer flex items-center justify-center text-xl transition-all backdrop-blur hover:-translate-y-0.5 hover:shadow-lg"
@@ -1058,7 +1060,9 @@ onUnmounted(() => {
           :title="t('console.fullscreen') + ' (F11)'"
           @click="toggleFullscreen"
         >
-          <v-icon size="small">mdi-fullscreen</v-icon>
+          <v-icon size="small">
+            mdi-fullscreen
+          </v-icon>
         </button>
         <button
           class="w-12 h-12 rounded-md cursor-pointer flex items-center justify-center text-xl transition-all backdrop-blur hover:-translate-y-0.5 hover:shadow-lg"
@@ -1074,7 +1078,9 @@ onUnmounted(() => {
           :title="t('console.settings')"
           @click="showSettings = true"
         >
-          <v-icon size="small">mdi-cog</v-icon>
+          <v-icon size="small">
+            mdi-cog
+          </v-icon>
         </button>
       </div>
 

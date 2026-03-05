@@ -152,7 +152,7 @@ async function updateCollection() {
             <template
               v-if="
                 currentCollection.user_id === auth.user?.id &&
-                auth.scopes.includes('collections.write')
+                  auth.scopes.includes('collections.write')
               "
             >
               <v-btn
@@ -174,14 +174,18 @@ async function updateCollection() {
               </v-btn>
               <template v-else>
                 <v-btn size="small" class="bg-toplayer" @click="closeEditable">
-                  <v-icon color="romm-red"> mdi-close </v-icon>
+                  <v-icon color="romm-red">
+                    mdi-close
+                  </v-icon>
                 </v-btn>
                 <v-btn
                   size="small"
                   class="bg-toplayer ml-1"
                   @click="updateCollection"
                 >
-                  <v-icon color="romm-green"> mdi-check </v-icon>
+                  <v-icon color="romm-green">
+                    mdi-check
+                  </v-icon>
                 </v-btn>
               </template>
             </template>
@@ -208,7 +212,9 @@ async function updateCollection() {
                     })
                   "
                 >
-                  <v-icon size="large"> mdi-image-search-outline </v-icon>
+                  <v-icon size="large">
+                    mdi-image-search-outline
+                  </v-icon>
                 </v-btn>
                 <v-btn
                   title="Upload custom cover"
@@ -216,7 +222,9 @@ async function updateCollection() {
                   class="translucent"
                   @click="triggerFileInput"
                 >
-                  <v-icon size="large"> mdi-cloud-upload-outline </v-icon>
+                  <v-icon size="large">
+                    mdi-cloud-upload-outline
+                  </v-icon>
                   <v-file-input
                     id="file-input"
                     v-model="updatedCollection.artwork"
@@ -313,14 +321,15 @@ async function updateCollection() {
             <template v-for="field in collectionInfoFields" :key="field.key">
               <div>
                 <v-chip size="small" class="mr-2 px-0" label>
-                  <v-chip label> {{ field.label }} </v-chip
-                  ><span class="px-2">{{
+                  <v-chip label>
+                    {{ field.label }}
+                  </v-chip><span class="px-2">{{
                     currentCollection[
                       field.key as keyof typeof currentCollection
                     ]?.toString()
                       ? currentCollection[
-                          field.key as keyof typeof currentCollection
-                        ]
+                        field.key as keyof typeof currentCollection
+                      ]
                       : "N/A"
                   }}</span>
                 </v-chip>
@@ -333,7 +342,7 @@ async function updateCollection() {
     <RSection
       v-if="
         auth.scopes.includes('collections.write') &&
-        currentCollection.user_id === auth.user?.id
+          currentCollection.user_id === auth.user?.id
       "
       icon="mdi-alert"
       icon-color="red"
@@ -352,7 +361,9 @@ async function updateCollection() {
               emitter?.emit('showDeleteCollectionDialog', currentCollection)
             "
           >
-            <v-icon class="text-romm-red mr-2"> mdi-delete </v-icon>
+            <v-icon class="text-romm-red mr-2">
+              mdi-delete
+            </v-icon>
             {{ t("collection.delete-collection") }}
           </v-btn>
         </div>

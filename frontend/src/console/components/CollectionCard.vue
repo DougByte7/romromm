@@ -162,8 +162,8 @@ onMounted(() => {
         <template
           v-if="
             collection.is_virtual ||
-            !collection.path_cover_large ||
-            !collection.path_cover_small
+              !collection.path_cover_large ||
+              !collection.path_cover_small
           "
         >
           <div class="absolute inset-0">
@@ -174,7 +174,7 @@ onMounted(() => {
               loading="lazy"
               @load="emit('loaded')"
               @error="emit('loaded')"
-            />
+            >
             <img
               class="absolute inset-0 w-full h-full object-cover [clip-path:polygon(0_100%,100%_0,100%_100%)]"
               :src="secondLargeCover"
@@ -182,7 +182,7 @@ onMounted(() => {
               loading="lazy"
               @load="emit('loaded')"
               @error="emit('loaded')"
-            />
+            >
           </div>
         </template>
         <!-- Standard single cover for regular/smart collections -->
@@ -193,7 +193,7 @@ onMounted(() => {
           :alt="collection.name"
           @load="emit('loaded')"
           @error="emit('loaded')"
-        />
+        >
         <!-- Fallback (no cover) -->
         <div
           v-if="!firstLargeCover && !secondLargeCover"
@@ -201,7 +201,9 @@ onMounted(() => {
           :style="{ background: 'var(--console-collection-card-bg-fallback)' }"
         >
           <div class="flex flex-col items-center justify-center select-none">
-            <div class="text-3xl mb-2">🗂️</div>
+            <div class="text-3xl mb-2">
+              🗂️
+            </div>
             <div
               class="font-semibold text-center px-3 line-clamp-2"
               :style="{ color: 'var(--console-card-text)' }"

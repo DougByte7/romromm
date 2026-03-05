@@ -187,14 +187,16 @@ onBeforeUnmount(() => {
       v-bind="
         collectionRoute
           ? {
-              to: collectionRoute,
-            }
+            to: collectionRoute,
+          }
           : {}
       "
       :class="{
         'transform-scale': transformScale && !enable3DTilt,
       }"
       :aria-label="`${collection.name} game card`"
+      :min-width="width"
+      :max-width="width"
       @mouseenter="
         () => {
           emit('hover', { isHovering: true, id: collection.id });
@@ -215,8 +217,6 @@ onBeforeUnmount(() => {
           emit('hover', { isHovering: false, id: collection.id });
         }
       "
-      :min-width="width"
-      :max-width="width"
     >
       <v-row v-if="showTitle" class="pa-1 justify-center bg-surface">
         <div
@@ -233,8 +233,8 @@ onBeforeUnmount(() => {
         <template
           v-if="
             collection.is_virtual ||
-            !collection.path_cover_large ||
-            !collection.path_cover_small
+              !collection.path_cover_large ||
+              !collection.path_cover_small
           "
         >
           <div class="split-image first-image">

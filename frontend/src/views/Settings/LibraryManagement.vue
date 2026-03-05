@@ -80,9 +80,11 @@ watch(
         variant="tonal"
         class="my-2"
       >
-        <template #title>{{
-          t("settings.config-file-not-mounted-title")
-        }}</template>
+        <template #title>
+          {{
+            t("settings.config-file-not-mounted-title")
+          }}
+        </template>
         <template #text>
           {{ t("settings.config-file-not-mounted-desc") }}
         </template>
@@ -93,9 +95,11 @@ watch(
         variant="tonal"
         class="my-2"
       >
-        <template #title>{{
-          t("settings.config-file-not-writable-title")
-        }}</template>
+        <template #title>
+          {{
+            t("settings.config-file-not-writable-title")
+          }}
+        </template>
         <template #text>
           {{ t("settings.config-file-not-writable-desc") }}
         </template>

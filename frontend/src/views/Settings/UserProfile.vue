@@ -91,9 +91,9 @@ onUnmounted(() => {
                 <v-img
                   :src="
                     imagePreviewUrl ||
-                    (userToEdit.avatar_path
-                      ? `/assets/romm/assets/${userToEdit.avatar_path}?ts=${userToEdit.updated_at}`
-                      : defaultAvatarPath)
+                      (userToEdit.avatar_path
+                        ? `/assets/romm/assets/${userToEdit.avatar_path}?ts=${userToEdit.updated_at}`
+                        : defaultAvatarPath)
                   "
                 >
                   <v-fade-transition>

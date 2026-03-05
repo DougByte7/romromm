@@ -57,8 +57,10 @@ function setState(state: string | null) {
       variant="outlined"
       @update:model-value="setState"
     >
-      <v-btn value="all" size="small"
-        ><v-icon size="x-large">mdi-cancel</v-icon>
+      <v-btn value="all" size="small">
+        <v-icon size="x-large">
+          mdi-cancel
+        </v-icon>
       </v-btn>
       <v-tooltip
         :text="t('platform.show-favorites-only')"
@@ -67,7 +69,9 @@ function setState(state: string | null) {
       >
         <template #activator="{ props }">
           <v-btn value="favorites" size="small" v-bind="props">
-            <v-icon size="x-large">mdi-star</v-icon>
+            <v-icon size="x-large">
+              mdi-star
+            </v-icon>
           </v-btn>
         </template>
       </v-tooltip>
@@ -78,7 +82,9 @@ function setState(state: string | null) {
       >
         <template #activator="{ props }">
           <v-btn value="not-favorites" size="small" v-bind="props">
-            <v-icon size="x-large">mdi-star-outline</v-icon>
+            <v-icon size="x-large">
+              mdi-star-outline
+            </v-icon>
           </v-btn>
         </template>
       </v-tooltip>

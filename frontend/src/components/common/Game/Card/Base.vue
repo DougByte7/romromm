@@ -258,8 +258,8 @@ onBeforeUnmount(() => {
           ...hoverProps,
           ...(withLink && rom.id
             ? {
-                to: { name: ROUTES.ROM, params: { rom: rom.id } },
-              }
+              to: { name: ROUTES.ROM, params: { rom: rom.id } },
+            }
             : {}),
         }"
         :variant="boxartStyle === 'cover_path' ? 'elevated' : 'flat'"
@@ -298,15 +298,15 @@ onBeforeUnmount(() => {
                 <div
                   v-if="
                     isOuterHovering ||
-                    showGameTitleAlways ||
-                    (romsStore.isSimpleRom(rom) && !rom.path_cover_large) ||
-                    (!romsStore.isSimpleRom(rom) &&
-                      !rom.igdb_url_cover &&
-                      !rom.moby_url_cover &&
-                      !rom.ss_url_cover &&
-                      !rom.sgdb_url_cover &&
-                      !rom.launchbox_url_cover &&
-                      !rom.flashpoint_url_cover)
+                      showGameTitleAlways ||
+                      (romsStore.isSimpleRom(rom) && !rom.path_cover_large) ||
+                      (!romsStore.isSimpleRom(rom) &&
+                        !rom.igdb_url_cover &&
+                        !rom.moby_url_cover &&
+                        !rom.ss_url_cover &&
+                        !rom.sgdb_url_cover &&
+                        !rom.launchbox_url_cover &&
+                        !rom.flashpoint_url_cover)
                   "
                   class="translucent text-white"
                   :class="
@@ -401,11 +401,11 @@ onBeforeUnmount(() => {
                 <ActionBar
                   v-if="
                     romsStore.isSimpleRom(rom) &&
-                    showActionBar &&
-                    (isOuterHovering ||
-                      showActionBarAlways ||
-                      activeMenu ||
-                      smAndDown)
+                      showActionBar &&
+                      (isOuterHovering ||
+                        showActionBarAlways ||
+                        activeMenu ||
+                        smAndDown)
                   "
                   class="translucent"
                   :rom="rom"
@@ -458,14 +458,14 @@ onBeforeUnmount(() => {
                 playsinline
                 preload="none"
               >
-                <track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT" />
+                <track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT">
               </video>
               <img
                 src="/assets/default/miximage.png"
                 alt="Mix overlay"
                 style="z-index: 1"
                 class="position-relative"
-              />
+              >
             </div>
           </div>
         </v-card-text>

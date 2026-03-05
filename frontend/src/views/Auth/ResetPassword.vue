@@ -81,8 +81,7 @@ async function resetPassword() {
           <span
             v-if="newPassword !== confirmPassword && newPassword.length > 0"
             class="text-red text-caption"
-            >Passwords do not match</span
-          >
+          >Passwords do not match</span>
           <v-btn
             type="submit"
             class="bg-toplayer mt-4"

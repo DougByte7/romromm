@@ -46,7 +46,9 @@ const allStyles = computed(() => {
   <div v-if="howLongToBeat">
     <v-row class="mb-4">
       <v-col cols="12">
-        <h3 class="text-h6 mb-4">{{ t("rom.how-long-to-beat") }}</h3>
+        <h3 class="text-h6 mb-4">
+          {{ t("rom.how-long-to-beat") }}
+        </h3>
       </v-col>
     </v-row>
 
@@ -57,7 +59,9 @@ const allStyles = computed(() => {
             <div class="text-subtitle-1 font-weight-medium mb-2">
               {{ t("rom.main-story") }}
             </div>
-            <div class="text-h5 font-weight-bold">{{ mainStory }} Hours</div>
+            <div class="text-h5 font-weight-bold">
+              {{ mainStory }} Hours
+            </div>
             <div
               v-if="howLongToBeat.main_story_count"
               class="text-caption text-medium-emphasis mt-1"
@@ -113,7 +117,9 @@ const allStyles = computed(() => {
             <div class="text-subtitle-1 font-weight-medium mb-2">
               {{ t("rom.all-styles") }}
             </div>
-            <div class="text-h5 font-weight-bold">{{ allStyles }} Hours</div>
+            <div class="text-h5 font-weight-bold">
+              {{ allStyles }} Hours
+            </div>
             <div
               v-if="howLongToBeat.all_styles_count"
               class="text-caption text-medium-emphasis mt-1"

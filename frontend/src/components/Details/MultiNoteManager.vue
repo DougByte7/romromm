@@ -278,7 +278,7 @@ watch(
                         <v-btn
                           :disabled="
                             !scopes.includes('roms.user.write') ||
-                            editingNotes[note.title]
+                              editingNotes[note.title]
                           "
                           v-bind="tooltipProps"
                           :color="note.is_public ? 'romm-green' : 'accent'"
@@ -335,15 +335,15 @@ watch(
                           <v-btn
                             :disabled="
                               !scopes.includes('roms.user.write') ||
-                              editingNotes[note.title]
+                                editingNotes[note.title]
                             "
                             v-bind="tooltipProps"
                             class="bg-toplayer"
                             @click.stop="confirmDeleteNote(note.title)"
                           >
-                            <v-icon size="large" color="error"
-                              >mdi-delete</v-icon
-                            >
+                            <v-icon size="large" color="error">
+                              mdi-delete
+                            </v-icon>
                           </v-btn>
                         </template>
                       </v-tooltip>
@@ -393,9 +393,15 @@ watch(
           </v-expansion-panels>
         </div>
         <div v-else class="text-center py-8">
-          <v-icon color="grey" size="64">mdi-note-text-outline</v-icon>
-          <p class="text-h6 text-grey mt-4 mb-2">{{ t("rom.no-notes") }}</p>
-          <p class="text-body-2 text-grey">{{ t("rom.no-notes-desc") }}</p>
+          <v-icon color="grey" size="64">
+            mdi-note-text-outline
+          </v-icon>
+          <p class="text-h6 text-grey mt-4 mb-2">
+            {{ t("rom.no-notes") }}
+          </p>
+          <p class="text-body-2 text-grey">
+            {{ t("rom.no-notes-desc") }}
+          </p>
         </div>
       </template>
     </RSection>
@@ -480,9 +486,11 @@ watch(
             class="mb-3"
           />
           <v-card flat class="mb-3">
-            <v-card-subtitle class="px-0 pb-2">{{
-              t("rom.note-content")
-            }}</v-card-subtitle>
+            <v-card-subtitle class="px-0 pb-2">
+              {{
+                t("rom.note-content")
+              }}
+            </v-card-subtitle>
             <MdEditor
               v-model="newNoteContent"
               no-highlight
@@ -511,9 +519,11 @@ watch(
       <template #footer>
         <v-row class="justify-center pa-2" no-gutters>
           <v-btn-group divided density="compact">
-            <v-btn class="bg-toplayer" @click="closeAddNote">{{
-              t("common.cancel")
-            }}</v-btn>
+            <v-btn class="bg-toplayer" @click="closeAddNote">
+              {{
+                t("common.cancel")
+              }}
+            </v-btn>
             <v-btn
               class="bg-toplayer text-romm-green"
               :disabled="!newNoteTitle.trim() || newNoteTitleErrors.length > 0"

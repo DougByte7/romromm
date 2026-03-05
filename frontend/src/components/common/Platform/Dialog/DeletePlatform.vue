@@ -86,12 +86,9 @@ function closeDialog() {
           :name="platform.name"
           :fs-slug="platform.fs_slug"
         />
-        <span class="ml-1"
-          >{{ platform.name }} - [<span class="text-primary">{{
-            platform.fs_slug
-          }}</span
-          >{{ t("platform.removing-platform-2") }}</span
-        >
+        <span class="ml-1">{{ platform.name }} - [<span class="text-primary">{{
+          platform.fs_slug
+        }}</span>{{ t("platform.removing-platform-2") }}</span>
       </v-row>
     </template>
     <template #append>

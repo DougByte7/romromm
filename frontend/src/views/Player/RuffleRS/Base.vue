@@ -155,20 +155,22 @@ onMounted(async () => {
             <v-row no-gutters>
               <v-col>
                 <v-card-title class="text-subtitle-1 pa-0 text-uppercase">
-                  <v-icon class="mr-2"> mdi-palette </v-icon>
+                  <v-icon class="mr-2">
+                    mdi-palette
+                  </v-icon>
                   <span>{{ t("play.select-background-color") }}</span>
                 </v-card-title>
               </v-col>
               <v-col class="d-flex justify-end">
                 <input
-                  v-model="backgroundColor"
                   id="background-color-input"
+                  v-model="backgroundColor"
                   type="color"
                   class="h-100 w-50 text-right"
                   :aria-label="t('play.select-background-color')"
                   :title="t('play.select-background-color')"
                   @change="onBackgroundColorChange"
-                />
+                >
               </v-col>
             </v-row>
           </v-card>
@@ -192,8 +194,8 @@ onMounted(async () => {
                     fullScreenOnPlay
                       ? "mdi-checkbox-outline"
                       : "mdi-checkbox-blank-outline"
-                  }} </v-icon
-                >{{ t("play.full-screen") }}
+                  }}
+                </v-icon>{{ t("play.full-screen") }}
               </v-btn>
             </v-col>
             <v-col

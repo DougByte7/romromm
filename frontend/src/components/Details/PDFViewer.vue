@@ -37,7 +37,7 @@ const pdfViewerConfig = {
       class="px-1"
       style="width: 40px"
       type="number"
-    />
+    >
     <span :id="pdfViewerConfig.numPages" class="ml-2" />
     <button
       :id="pdfViewerConfig.firstPage"

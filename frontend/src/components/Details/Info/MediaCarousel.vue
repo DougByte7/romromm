@@ -110,7 +110,7 @@ const carouselHeight = computed(() => {
         class="h-full object-contain"
         controls
       >
-        <track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT" />
+        <track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT">
       </video>
     </v-carousel-item>
     <v-carousel-item

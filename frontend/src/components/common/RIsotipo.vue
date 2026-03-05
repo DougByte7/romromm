@@ -11,7 +11,7 @@ withDefaults(defineProps<{ size?: number; avatar?: boolean }>(), {
     :size="size"
     :class="{ 'rounded-circle': avatar, rounded: !avatar }"
   >
-    <img :src="`/assets/isotipo.svg`" alt="Romm Logo" :width="size" />
+    <img :src="`/assets/isotipo.svg`" alt="Romm Logo" :width="size">
   </v-avatar>
 </template>
 

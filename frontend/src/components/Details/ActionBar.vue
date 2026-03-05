@@ -108,8 +108,8 @@ async function copyDownloadLink(rom: DetailedRom) {
       <v-menu
         v-if="
           auth.scopes.includes('roms.write') ||
-          auth.scopes.includes('roms.user.write') ||
-          auth.scopes.includes('collections.write')
+            auth.scopes.includes('roms.user.write') ||
+            auth.scopes.includes('collections.write')
         "
         location="bottom"
       >

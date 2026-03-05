@@ -69,7 +69,9 @@ const cleanupProgress = computed(() => {
               cleanupProgress.platformsToRemove
             }}/{{ cleanupProgress.platformsInDB }}
           </div>
-          <div class="text-uppercase">{{ t("common.platforms") }}</div>
+          <div class="text-uppercase">
+            {{ t("common.platforms") }}
+          </div>
         </div>
       </v-card>
 
@@ -88,7 +90,9 @@ const cleanupProgress = computed(() => {
               cleanupProgress.romsToRemove
             }}/{{ cleanupProgress.romsInDB }}
           </div>
-          <div class="text-uppercase">ROMs</div>
+          <div class="text-uppercase">
+            ROMs
+          </div>
         </div>
       </v-card>
 
@@ -102,8 +106,12 @@ const cleanupProgress = computed(() => {
           <v-avatar variant="text" size="24" class="bg-warning-lighten-1">
             <v-icon icon="mdi-percent" size="20" />
           </v-avatar>
-          <div class="font-weight-bold">{{ cleanupProgress.percentage }}%</div>
-          <div class="text-uppercase">{{ t("settings.progress") }}</div>
+          <div class="font-weight-bold">
+            {{ cleanupProgress.percentage }}%
+          </div>
+          <div class="text-uppercase">
+            {{ t("settings.progress") }}
+          </div>
         </div>
       </v-card>
     </div>

@@ -43,7 +43,9 @@ const virtualListHeight = computed(() => {
           class="ml-3"
           label
         >
-          <v-icon class="mr-1"> mdi-close </v-icon>
+          <v-icon class="mr-1">
+            mdi-close
+          </v-icon>
           {{ t("scan.not-identified").toUpperCase() }}
         </v-chip>
       </template>
@@ -74,13 +76,17 @@ const virtualListHeight = computed(() => {
             <template #append>
               <template v-if="rom.is_identifying">
                 <v-chip color="orange" size="x-small" label>
-                  <v-icon class="mr-1"> mdi-search-web </v-icon>
+                  <v-icon class="mr-1">
+                    mdi-search-web
+                  </v-icon>
                   Identifying...
                 </v-chip>
               </template>
               <template v-else>
                 <v-chip v-if="rom.is_unidentified" color="red" size="x-small" label>
-                  <v-icon class="mr-1"> mdi-close </v-icon>
+                  <v-icon class="mr-1">
+                    mdi-close
+                  </v-icon>
                   {{ t("scan.not-identified") }}
                 </v-chip>
                 <v-chip

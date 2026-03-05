@@ -275,7 +275,9 @@ async function onDownload() {
         rounded="0"
         @click="emitter?.emit('showDeleteRomDialog', romsStore.selectedRoms)"
       >
-        <v-icon color="romm-red"> mdi-delete </v-icon>
+        <v-icon color="romm-red">
+          mdi-delete
+        </v-icon>
       </v-btn>
     </v-speed-dial>
   </div>
@@ -301,7 +303,9 @@ async function onDownload() {
         rounded="0"
         @click="scrollToTop"
       >
-        <v-icon color="primary"> mdi-chevron-up </v-icon>
+        <v-icon color="primary">
+          mdi-chevron-up
+        </v-icon>
       </v-btn>
     </v-scroll-y-reverse-transition>
   </div>

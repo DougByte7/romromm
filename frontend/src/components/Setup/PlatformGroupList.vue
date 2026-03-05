@@ -57,9 +57,7 @@ const countSelectedInGroup = (platforms: Platform[]) => {
             />
             <div class="flex-grow-1">
               <strong>{{ groupName }}</strong>
-              <span class="ml-2 text-caption text-grey"
-                >({{ platforms.length }})</span
-              >
+              <span class="ml-2 text-caption text-grey">({{ platforms.length }})</span>
               <v-chip
                 v-if="showCheckboxes && countSelectedInGroup(platforms) > 0"
                 size="x-small"

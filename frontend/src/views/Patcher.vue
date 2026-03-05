@@ -2,7 +2,7 @@
 import { useDropZone } from "@vueuse/core";
 import type { Emitter } from "mitt";
 import { storeToRefs } from "pinia";
-import { inject, ref, onMounted, watch, computed } from "vue";
+import { inject, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import MissingFromFSIcon from "@/components/common/MissingFromFSIcon.vue";
 import PlatformIcon from "@/components/common/Platform/PlatformIcon.vue";
@@ -16,28 +16,10 @@ import storeUpload from "@/stores/upload";
 import type { Events } from "@/types/emitter";
 import { formatBytes } from "@/utils";
 
-// Declare global variables for RomPatcher
-declare global {
-  interface Window {
-    BinFile: unknown;
-    IPS: unknown;
-    UPS: unknown;
-    APS: unknown;
-    APSGBA: unknown;
-    BPS: unknown;
-    RUP: unknown;
-    PPF: unknown;
-    BDF: unknown;
-    PMSR: unknown;
-    VCDIFF: unknown;
-  }
-}
-
 const { t } = useI18n();
 const platformsStore = storePlatforms();
 const { filteredPlatforms } = storeToRefs(platformsStore);
 const loadError = ref<string | null>(null);
-const coreLoaded = ref(false);
 const romFile = ref<File | null>(null);
 const patchFile = ref<File | null>(null);
 const romBin = ref<unknown | null>(null);
@@ -100,44 +82,6 @@ watch([romFile, patchFile], ([rom, patch]) => {
   }
 });
 
-async function ensureCoreLoaded() {
-  if (coreLoaded.value) return;
-  try {
-    window.BinFile =
-      window.IPS =
-      window.UPS =
-      window.APS =
-      window.APSGBA =
-      window.BPS =
-      window.RUP =
-      window.PPF =
-      window.BDF =
-      window.PMSR =
-      window.VCDIFF =
-        null;
-
-    await Promise.all([
-      import("rom-patcher/rom-patcher-js/modules/BinFile.js"),
-      import("rom-patcher/rom-patcher-js/modules/HashCalculator.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.aps_gba.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.aps_n64.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.bdf.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.bps.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.ips.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.pmsr.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.ppf.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.rup.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.ups.js"),
-      import("rom-patcher/rom-patcher-js/modules/RomPatcher.format.vcdiff.js"),
-      import("rom-patcher/rom-patcher-js/RomPatcher.js"),
-    ]);
-
-    coreLoaded.value = true;
-  } catch (e: unknown) {
-    loadError.value = (e as { message?: string })?.message || String(e);
-  }
-}
-
 function setRomFile(file: File | null) {
   romFile.value = file;
   romBin.value = null;
@@ -189,8 +133,6 @@ function triggerPatchInput() {
 async function patchRom() {
   loadError.value = null;
   statusMessage.value = null;
-  if (!coreLoaded.value) await ensureCoreLoaded();
-  if (!coreLoaded.value) return; // bail on error
 
   if (!romFile.value) {
     loadError.value = t("patcher.error-no-rom");
@@ -399,17 +341,15 @@ async function uploadPatchedRom(binaryData: Uint8Array, fileName: string) {
     });
 }
 
-onMounted(async () => {
-  // Preload core for faster interaction
-  await ensureCoreLoaded();
-});
 </script>
 
 <template>
   <v-row class="align-center justify-center scroll h-100 px-4" no-gutters>
     <v-col cols="12" sm="10" md="8" xl="6">
       <v-card class="pa-4 bg-background" elevation="0">
-        <v-card-title class="pb-2 px-0">{{ t("patcher.title") }}</v-card-title>
+        <v-card-title class="pb-2 px-0">
+          {{ t("patcher.title") }}
+        </v-card-title>
         <v-card-subtitle class="pb-2 px-0 text-body-2">
           {{ t("patcher.subtitle") }}
         </v-card-subtitle>
@@ -421,8 +361,9 @@ onMounted(async () => {
             type="error"
             class="mb-4"
             density="compact"
-            >{{ loadError }}</v-alert
           >
+            {{ loadError }}
+          </v-alert>
 
           <v-alert
             v-if="statusMessage"
@@ -443,7 +384,9 @@ onMounted(async () => {
           <v-row class="mb-2" dense>
             <v-col cols="12" md="6">
               <v-sheet class="pa-3" rounded="lg" border color="surface">
-                <div class="text-subtitle-1">{{ t("patcher.rom-file") }}</div>
+                <div class="text-subtitle-1">
+                  {{ t("patcher.rom-file") }}
+                </div>
                 <div
                   ref="romDropZoneRef"
                   class="dropzone-container rounded-lg transition-all duration-300 ease-in-out mt-4"
@@ -484,7 +427,9 @@ onMounted(async () => {
                     class="d-flex align-center justify-space-between h-full min-h-[120px] px-4"
                   >
                     <div>
-                      <div class="text-subtitle-2">{{ romFile.name }}</div>
+                      <div class="text-subtitle-2">
+                        {{ romFile.name }}
+                      </div>
                       <div class="text-caption text-medium-emphasis mt-2">
                         <v-chip size="small" label>
                           {{ formatBytes(romFile.size) }}
@@ -506,7 +451,9 @@ onMounted(async () => {
                         variant="plain"
                         @click.stop="onRomInput(null)"
                       >
-                        <v-icon color="red"> mdi-close </v-icon>
+                        <v-icon color="red">
+                          mdi-close
+                        </v-icon>
                       </v-btn>
                     </div>
                   </div>
@@ -518,13 +465,15 @@ onMounted(async () => {
                   class="sr-only"
                   style="display: none"
                   @change="onRomChange"
-                />
+                >
               </v-sheet>
             </v-col>
 
             <v-col cols="12" md="6">
               <v-sheet class="pa-3" rounded="lg" border color="surface">
-                <div class="text-subtitle-1">{{ t("patcher.patch-file") }}</div>
+                <div class="text-subtitle-1">
+                  {{ t("patcher.patch-file") }}
+                </div>
                 <div
                   ref="patchDropZoneRef"
                   class="dropzone-container rounded-lg transition-all duration-300 ease-in-out mt-4"
@@ -569,7 +518,9 @@ onMounted(async () => {
                     class="d-flex align-center justify-space-between h-full min-h-[120px] px-4"
                   >
                     <div>
-                      <div class="text-subtitle-2">{{ patchFile.name }}</div>
+                      <div class="text-subtitle-2">
+                        {{ patchFile.name }}
+                      </div>
                       <div class="text-caption text-medium-emphasis mt-2">
                         <v-chip size="small" label>
                           {{ formatBytes(patchFile.size) }}
@@ -591,7 +542,9 @@ onMounted(async () => {
                         variant="plain"
                         @click.stop="onPatchInput(null)"
                       >
-                        <v-icon color="red"> mdi-close </v-icon>
+                        <v-icon color="red">
+                          mdi-close
+                        </v-icon>
                       </v-btn>
                     </div>
                   </div>
@@ -604,17 +557,18 @@ onMounted(async () => {
                   class="sr-only"
                   style="display: none"
                   @change="onPatchChange"
-                />
+                >
                 <div class="text-subtitle-2 text-medium-emphasis mt-4">
-                  {{ t("patcher.supported-formats") }}<br />
+                  {{ t("patcher.supported-formats") }}<br>
                   <v-chip
                     v-for="format in supportedPatchFormats"
                     :key="format"
                     size="x-small"
                     class="mr-1 mt-1"
                     label
-                    >{{ format }}</v-chip
                   >
+                    {{ format }}
+                  </v-chip>
                 </div>
               </v-sheet>
               <div class="d-flex align-center justify-space-between mt-4">
@@ -769,7 +723,9 @@ onMounted(async () => {
                             no-gutters
                           >
                             <v-chip color="red" size="small" label>
-                              <v-icon class="mr-1"> mdi-close </v-icon>
+                              <v-icon class="mr-1">
+                                mdi-close
+                              </v-icon>
                               {{ t("scan.not-identified").toUpperCase() }}
                             </v-chip>
                           </v-row>
@@ -815,18 +771,18 @@ onMounted(async () => {
                   class="bg-toplayer text-primary"
                   :disabled="
                     !romFile ||
-                    !patchFile ||
-                    applying ||
-                    (!downloadLocally && !saveIntoRomM) ||
-                    (saveIntoRomM && !selectedPlatform)
+                      !patchFile ||
+                      applying ||
+                      (!downloadLocally && !saveIntoRomM) ||
+                      (saveIntoRomM && !selectedPlatform)
                   "
                   :loading="applying"
                   :variant="
                     !romFile ||
-                    !patchFile ||
-                    applying ||
-                    (!downloadLocally && !saveIntoRomM) ||
-                    (saveIntoRomM && !selectedPlatform)
+                      !patchFile ||
+                      applying ||
+                      (!downloadLocally && !saveIntoRomM) ||
+                      (saveIntoRomM && !selectedPlatform)
                       ? 'plain'
                       : 'flat'
                   "
@@ -895,6 +851,9 @@ onMounted(async () => {
   }
 }
 </style>
+
+
+
 
 
 

@@ -157,7 +157,7 @@ const hashMatches = computed(() => {
             <template
               v-if="
                 rom.moby_metadata?.moby_score &&
-                rom.moby_metadata.moby_score !== 'None'
+                  rom.moby_metadata.moby_score !== 'None'
               "
             >
               <v-divider class="mx-2 border-opacity-25" vertical />

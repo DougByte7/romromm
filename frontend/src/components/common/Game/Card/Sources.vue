@@ -75,9 +75,9 @@ defineProps<{ rom: SearchRom }>();
     >
       <template #activator="{ props }">
         <v-avatar
+          v-if="rom.launchbox_id"
           v-bind="props"
           variant="text"
-          v-if="rom.launchbox_id"
           class="mr-1 mb-1"
           size="28"
           rounded="1"
@@ -95,9 +95,9 @@ defineProps<{ rom: SearchRom }>();
     >
       <template #activator="{ props }">
         <v-avatar
+          v-if="rom.flashpoint_id"
           v-bind="props"
           variant="text"
-          v-if="rom.flashpoint_id"
           class="mr-1 mb-1"
           size="28"
           rounded="1"

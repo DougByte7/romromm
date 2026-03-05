@@ -203,7 +203,9 @@ watch(
             <v-tab v-if="currentRom.has_manual" value="manual">
               {{ t("rom.manual") }}
             </v-tab>
-            <v-tab value="gamedata">{{ t("rom.save-data") }}</v-tab>
+            <v-tab value="gamedata">
+              {{ t("rom.save-data") }}
+            </v-tab>
             <v-tab value="personal">
               {{ t("rom.personal") }}
             </v-tab>
@@ -213,8 +215,8 @@ watch(
             <v-tab
               v-if="
                 mdAndDown &&
-                ((currentRom.igdb_metadata?.expansions ?? []).length > 0 ||
-                  (currentRom.igdb_metadata?.dlcs ?? []).length > 0)
+                  ((currentRom.igdb_metadata?.expansions ?? []).length > 0 ||
+                    (currentRom.igdb_metadata?.dlcs ?? []).length > 0)
               "
               value="additionalcontent"
             >
@@ -223,9 +225,9 @@ watch(
             <v-tab
               v-if="
                 smAndDown &&
-                ((currentRom.igdb_metadata?.remakes ?? []).length > 0 ||
-                  (currentRom.igdb_metadata?.remasters ?? []).length > 0 ||
-                  (currentRom.igdb_metadata?.expanded_games ?? []).length > 0)
+                  ((currentRom.igdb_metadata?.remakes ?? []).length > 0 ||
+                    (currentRom.igdb_metadata?.remasters ?? []).length > 0 ||
+                    (currentRom.igdb_metadata?.expanded_games ?? []).length > 0)
               "
               value="relatedgames"
             >
@@ -257,8 +259,8 @@ watch(
               <v-window-item
                 v-if="
                   mdAndDown &&
-                  (currentRom.igdb_metadata?.expansions ||
-                    currentRom.igdb_metadata?.dlcs)
+                    (currentRom.igdb_metadata?.expansions ||
+                      currentRom.igdb_metadata?.dlcs)
                 "
                 value="additionalcontent"
               >
@@ -267,9 +269,9 @@ watch(
               <v-window-item
                 v-if="
                   smAndDown &&
-                  (currentRom.igdb_metadata?.remakes ||
-                    currentRom.igdb_metadata?.remasters ||
-                    currentRom.igdb_metadata?.expanded_games)
+                    (currentRom.igdb_metadata?.remakes ||
+                      currentRom.igdb_metadata?.remasters ||
+                      currentRom.igdb_metadata?.expanded_games)
                 "
                 value="relatedgames"
               >
@@ -284,7 +286,7 @@ watch(
         <v-container
           v-if="
             currentRom.igdb_metadata?.expansions?.length ||
-            currentRom.igdb_metadata?.dlcs?.length
+              currentRom.igdb_metadata?.dlcs?.length
           "
           class="pa-0"
         >

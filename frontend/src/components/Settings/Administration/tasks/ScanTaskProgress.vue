@@ -60,7 +60,9 @@ const scanProgress = computed(() => {
           <div class="font-weight-bold">
             {{ scanProgress.platforms }}
           </div>
-          <div class="text-uppercase">Platforms</div>
+          <div class="text-uppercase">
+            Platforms
+          </div>
         </div>
       </v-card>
 
@@ -77,7 +79,9 @@ const scanProgress = computed(() => {
           <div class="font-weight-bold">
             {{ scanProgress.roms }}
           </div>
-          <div class="text-uppercase">ROMs</div>
+          <div class="text-uppercase">
+            ROMs
+          </div>
         </div>
       </v-card>
 
@@ -94,7 +98,9 @@ const scanProgress = computed(() => {
           <div class="font-weight-bold">
             {{ scanProgress.newRoms }}
           </div>
-          <div class="text-uppercase">Added</div>
+          <div class="text-uppercase">
+            Added
+          </div>
         </div>
       </v-card>
 
@@ -111,7 +117,9 @@ const scanProgress = computed(() => {
           <div class="font-weight-bold">
             {{ scanProgress.metadataRoms }}
           </div>
-          <div class="text-uppercase">Metadata</div>
+          <div class="text-uppercase">
+            Metadata
+          </div>
         </div>
       </v-card>
 
@@ -128,7 +136,9 @@ const scanProgress = computed(() => {
           <div class="font-weight-bold">
             {{ scanProgress.scannedFirmware }}
           </div>
-          <div class="text-uppercase">Firmware</div>
+          <div class="text-uppercase">
+            Firmware
+          </div>
         </div>
       </v-card>
     </div>

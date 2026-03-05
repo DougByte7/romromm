@@ -308,7 +308,9 @@ function openCacheDialog() {
               grow
             >
               <v-tab :value="true">
-                <v-icon start>mdi-content-save</v-icon>
+                <v-icon start>
+                  mdi-content-save
+                </v-icon>
                 {{ t("common.saves") }}
                 <v-badge
                   v-if="rom.user_saves.length > 0"
@@ -319,7 +321,9 @@ function openCacheDialog() {
                 />
               </v-tab>
               <v-tab :value="false">
-                <v-icon start>mdi-file</v-icon>
+                <v-icon start>
+                  mdi-file
+                </v-icon>
                 {{ t("common.states") }}
                 <v-badge
                   v-if="compatibleStates.length > 0"
@@ -350,9 +354,9 @@ function openCacheDialog() {
 
                 <!-- No Save Selected Message -->
                 <div v-else class="text-center py-8">
-                  <v-icon size="48" color="medium-emphasis"
-                    >mdi-content-save-outline</v-icon
-                  >
+                  <v-icon size="48" color="medium-emphasis">
+                    mdi-content-save-outline
+                  </v-icon>
                   <p class="text-body-2 text-medium-emphasis mt-2">
                     {{ t("play.no-save-selected") }}
                   </p>
@@ -395,9 +399,9 @@ function openCacheDialog() {
 
                 <!-- No State Selected Message -->
                 <div v-else class="text-center py-8">
-                  <v-icon size="48" color="medium-emphasis"
-                    >mdi-file-outline</v-icon
-                  >
+                  <v-icon size="48" color="medium-emphasis">
+                    mdi-file-outline
+                  </v-icon>
                   <p class="text-body-2 text-medium-emphasis mt-2">
                     {{ t("play.no-state-selected") }}
                   </p>
@@ -497,8 +501,8 @@ function openCacheDialog() {
               <v-divider
                 v-if="
                   rom.files.length > 1 ||
-                  supportedCores.length > 1 ||
-                  firmwareOptions.length > 0
+                    supportedCores.length > 1 ||
+                    firmwareOptions.length > 0
                 "
                 class="my-4"
               />
@@ -589,9 +593,7 @@ function openCacheDialog() {
 
       <v-row class="mb-8" no-gutters>
         <v-col class="text-right align-center">
-          <span class="text-medium-emphasis text-caption font-italic mr-2"
-            >Powered by emulatorjs</span
-          >
+          <span class="text-medium-emphasis text-caption font-italic mr-2">Powered by emulatorjs</span>
           <v-avatar size="50" rounded="0">
             <v-img src="/assets/emulatorjs/emulatorjs-logotype.svg" />
           </v-avatar>

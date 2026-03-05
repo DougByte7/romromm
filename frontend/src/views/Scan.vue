@@ -189,9 +189,11 @@ async function stopScan() {
                 </template>
                 <v-row no-gutters>
                   <v-col>
-                    <v-chip size="x-small" label class="text-grey">{{
-                      item.raw.fs_slug
-                    }}</v-chip>
+                    <v-chip size="x-small" label class="text-grey">
+                      {{
+                        item.raw.fs_slug
+                      }}
+                    </v-chip>
                     <v-icon
                       :icon="platformCategoryToIcon(item.raw.category || '')"
                       class="ml-2 text-caption text-grey"
@@ -200,8 +202,7 @@ async function stopScan() {
                     <span
                       v-if="item.raw.family_name"
                       class="ml-1 text-caption text-grey"
-                      >{{ item.raw.family_name }}</span
-                    >
+                    >{{ item.raw.family_name }}</span>
                   </v-col>
                 </v-row>
                 <template #append>
@@ -307,7 +308,9 @@ async function stopScan() {
                     no-gutters
                   >
                     <v-chip color="red" size="small" label>
-                      <v-icon class="mr-1"> mdi-close </v-icon>
+                      <v-icon class="mr-1">
+                        mdi-close
+                      </v-icon>
                       {{ t("scan.not-identified").toUpperCase() }}
                     </v-chip>
                   </v-row>
@@ -402,15 +405,15 @@ async function stopScan() {
                 <template #activator="{ props }">
                   <v-icon
                     v-bind="props"
-                    @click.stop
                     icon="mdi-information-outline"
                     size="small"
                     class="ml-2"
+                    @click.stop
                   />
                 </template>
                 <v-card max-width="600">
                   <v-card-text>
-                    <div v-html="t('scan.scan-types-info')"></div>
+                    <div v-html="t('scan.scan-types-info')" />
                     <div class="mt-3 text-right">
                       <a
                         href="https://docs.romm.app/latest/Usage/LibraryManagement/#scan"
@@ -439,8 +442,8 @@ async function stopScan() {
           :loading="scanning"
           rounded="4"
           height="40"
-          @click="scan"
           class="ma-1"
+          @click="scan"
         >
           <template #prepend>
             <v-icon :color="scanning ? '' : 'primary'">
@@ -465,7 +468,9 @@ async function stopScan() {
           @click="stopScan"
         >
           <template #prepend>
-            <v-icon :color="scanning ? 'red' : ''"> mdi-alert-octagon </v-icon>
+            <v-icon :color="scanning ? 'red' : ''">
+              mdi-alert-octagon
+            </v-icon>
           </template>
           {{ t("scan.abort") }}
         </v-btn>
@@ -517,7 +522,7 @@ async function stopScan() {
                         ? t('scan.hashes-enabled-tooltip')
                         : t('scan.hashes-disabled-tooltip')
                     "
-                  ></div>
+                  />
                 </v-card-text>
               </v-card>
             </v-menu>
@@ -576,7 +581,9 @@ async function stopScan() {
           size="small"
           class="mr-1 my-1"
         >
-          <v-icon left> mdi-controller </v-icon>
+          <v-icon left>
+            mdi-controller
+          </v-icon>
           <span v-if="xs" class="ml-2">{{
             t("scan.platforms-scanned-n", scanStats.scanned_platforms)
           }}</span>
@@ -598,7 +605,9 @@ async function stopScan() {
           text-color="white"
           class="ml-1 my-1"
         >
-          <v-icon left> mdi-disc </v-icon>
+          <v-icon left>
+            mdi-disc
+          </v-icon>
           <span v-if="xs" class="ml-2">{{
             t("scan.roms-scanned-n", scanStats.scanned_roms)
           }}</span>

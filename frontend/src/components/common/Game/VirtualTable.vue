@@ -159,7 +159,7 @@ function updateOptions({ sortBy }: { sortBy: SortBy }) {
       <v-checkbox-btn
         :indeterminate="
           selectedRomIDs.length > 0 &&
-          selectedRomIDs.length < filteredRoms.length
+            selectedRomIDs.length < filteredRoms.length
         "
         :model-value="selectedRomIDs.length === filteredRoms.length"
         @click.stop="updateSelectAll"
@@ -421,8 +421,8 @@ function updateOptions({ sortBy }: { sortBy: SortBy }) {
             <v-menu
               v-if="
                 auth.scopes.includes('roms.write') ||
-                auth.scopes.includes('roms.user.write') ||
-                auth.scopes.includes('collections.write')
+                  auth.scopes.includes('roms.user.write') ||
+                  auth.scopes.includes('collections.write')
               "
               location="bottom"
               @click.prevent

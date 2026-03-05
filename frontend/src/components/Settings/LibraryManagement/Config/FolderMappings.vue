@@ -354,7 +354,7 @@ onMounted(async () => {
         <v-menu
           v-if="
             authStore.scopes.includes('platforms.write') &&
-            config.CONFIG_FILE_WRITABLE
+              config.CONFIG_FILE_WRITABLE
           "
         >
           <template #activator="{ props }">
@@ -369,7 +369,9 @@ onMounted(async () => {
               <span v-if="item.slug">{{ item.displayName }}</span>
               <span v-else class="text-romm-gray">—</span>
               <template #append>
-                <v-icon size="small" class="ml-2">mdi-chevron-down</v-icon>
+                <v-icon size="small" class="ml-2">
+                  mdi-chevron-down
+                </v-icon>
               </template>
             </v-list-item>
           </template>
@@ -392,7 +394,9 @@ onMounted(async () => {
               class="text-romm-red"
               @click="updatePlatformMapping(item.fsSlug, undefined, item.type)"
             >
-              <v-icon class="mr-2">mdi-delete</v-icon>
+              <v-icon class="mr-2">
+                mdi-delete
+              </v-icon>
               <v-list-item-title>{{ t("common.delete") }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -409,8 +413,8 @@ onMounted(async () => {
         <v-menu
           v-if="
             authStore.scopes.includes('platforms.write') &&
-            item.slug &&
-            config.CONFIG_FILE_WRITABLE
+              item.slug &&
+              config.CONFIG_FILE_WRITABLE
           "
           location="center"
         >
@@ -467,9 +471,9 @@ onMounted(async () => {
         <div
           v-if="
             authStore.scopes.includes('platforms.write') &&
-            config.CONFIG_FILE_WRITABLE &&
-            item.type !== 'auto' &&
-            item.slug
+              config.CONFIG_FILE_WRITABLE &&
+              item.type !== 'auto' &&
+              item.slug
           "
         >
           <v-btn

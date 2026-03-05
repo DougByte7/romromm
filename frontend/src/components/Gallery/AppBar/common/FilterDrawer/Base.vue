@@ -582,7 +582,9 @@ onMounted(async () => {
             >
               <template #activator="{ props }">
                 <v-btn value="any" size="small" v-bind="props">
-                  <v-icon size="x-large">mdi-set-all</v-icon>
+                  <v-icon size="x-large">
+                    mdi-set-all
+                  </v-icon>
                 </v-btn>
               </template>
             </v-tooltip>
@@ -593,7 +595,9 @@ onMounted(async () => {
             >
               <template #activator="{ props }">
                 <v-btn value="all" size="small" v-bind="props">
-                  <v-icon size="x-large">mdi-set-center</v-icon>
+                  <v-icon size="x-large">
+                    mdi-set-center
+                  </v-icon>
                 </v-btn>
               </template>
             </v-tooltip>
@@ -604,7 +608,9 @@ onMounted(async () => {
             >
               <template #activator="{ props }">
                 <v-btn value="none" size="small" v-bind="props">
-                  <v-icon size="x-large">mdi-set-none</v-icon>
+                  <v-icon size="x-large">
+                    mdi-set-none
+                  </v-icon>
                 </v-btn>
               </template>
             </v-tooltip>

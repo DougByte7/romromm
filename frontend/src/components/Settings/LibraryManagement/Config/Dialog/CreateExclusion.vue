@@ -163,8 +163,8 @@ function closeDialog() {
                 {{ t("settings.add-exclusion-for") }} {{ exclusionTitle }}
               </p>
               <v-text-field
-                :disabled="!exclusionType"
                 v-model="exclusionValue"
+                :disabled="!exclusionType"
                 :label="t('settings.exclusion-value')"
                 :placeholder="t('settings.exclusion-placeholder')"
                 variant="outlined"

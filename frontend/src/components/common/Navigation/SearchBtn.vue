@@ -40,8 +40,7 @@ const navigationStore = storeNavigation();
           v-if="withTag"
           class="text-caption text-center"
           :class="{ 'text-primary': $route.name === ROUTES.SEARCH }"
-          >{{ t("common.search") }}</span
-        >
+        >{{ t("common.search") }}</span>
       </v-expand-transition>
     </div>
   </v-btn>

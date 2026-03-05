@@ -48,7 +48,7 @@ function closeDialog() {
       </div>
       <div class="text-body-1 text-center px-4 pb-4">
         <strong>{{ t("play.clear-cache-warning") }}</strong>
-        <br />
+        <br>
         {{ t("play.clear-cache-description") }}
       </div>
     </template>

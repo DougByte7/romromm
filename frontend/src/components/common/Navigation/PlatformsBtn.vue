@@ -43,8 +43,7 @@ const { activePlatformsDrawer } = storeToRefs(navigationStore);
           v-if="withTag"
           class="text-caption text-center"
           :class="{ 'text-primary': $route.name === ROUTES.PLATFORM }"
-          >{{ t("common.platforms") }}</span
-        >
+        >{{ t("common.platforms") }}</span>
       </v-expand-transition>
     </div>
   </v-btn>

@@ -36,7 +36,7 @@ const { idle: mouseIdle } = useIdle(100, {
               style="filter: grayscale(100%)"
               src="/assets/isotipo.svg"
               alt="Romromm Logo"
-            />
+            >
           </div>
         </Transition>
       </router-view>

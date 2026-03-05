@@ -27,8 +27,8 @@ withDefaults(
     v-bind="{
       ...(withLink && rom
         ? {
-            to: { name: ROUTES.ROM, params: { rom: rom.id } },
-          }
+          to: { name: ROUTES.ROM, params: { rom: rom.id } },
+        }
         : {}),
     }"
   >

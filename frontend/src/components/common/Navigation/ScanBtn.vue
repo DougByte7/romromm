@@ -190,8 +190,7 @@ onBeforeUnmount(() => {
           v-if="withTag"
           class="text-caption text-center"
           :class="{ 'text-primary': $route.name == 'scan' }"
-          >{{ t("scan.scan") }}</span
-        >
+        >{{ t("scan.scan") }}</span>
       </v-expand-transition>
     </div>
   </v-btn>

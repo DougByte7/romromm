@@ -226,7 +226,9 @@ watch(
                   :tabindex="tabIndex"
                   @click="closeEditable"
                 >
-                  <v-icon color="romm-red"> mdi-close </v-icon>
+                  <v-icon color="romm-red">
+                    mdi-close
+                  </v-icon>
                 </v-btn>
                 <v-btn
                   size="small"
@@ -234,7 +236,9 @@ watch(
                   :tabindex="tabIndex"
                   @click="updatePlatform"
                 >
-                  <v-icon color="romm-green"> mdi-check </v-icon>
+                  <v-icon color="romm-green">
+                    mdi-check
+                  </v-icon>
                 </v-btn>
               </template>
             </template>
@@ -448,7 +452,9 @@ watch(
         >
           <v-col cols="12">
             <v-chip color="red" size="small" label>
-              <v-icon class="mr-1"> mdi-close </v-icon>
+              <v-icon class="mr-1">
+                mdi-close
+              </v-icon>
               {{ t("scan.not-identified").toUpperCase() }}
             </v-chip>
           </v-col>
@@ -556,7 +562,9 @@ watch(
             variant="flat"
             @click="emitter?.emit('showDeletePlatformDialog', currentPlatform)"
           >
-            <v-icon class="text-romm-red mr-2"> mdi-delete </v-icon>
+            <v-icon class="text-romm-red mr-2">
+              mdi-delete
+            </v-icon>
             {{ t("platform.delete-platform") }}
           </v-btn>
         </div>

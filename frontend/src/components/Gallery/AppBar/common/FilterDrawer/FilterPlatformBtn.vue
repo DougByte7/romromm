@@ -36,7 +36,9 @@ const emitter = inject<Emitter<Events>>("emitter");
       @update:model-value="nextTick(() => emitter?.emit('filterRoms', null))"
     >
       <template #prepend-inner>
-        <v-icon class="ml-2 mr-1">mdi-controller</v-icon>
+        <v-icon class="ml-2 mr-1">
+          mdi-controller
+        </v-icon>
       </template>
       <template #item="{ props, item }">
         <v-list-item

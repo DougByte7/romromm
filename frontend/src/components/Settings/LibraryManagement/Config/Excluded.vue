@@ -112,7 +112,7 @@ function removeExclusion(exclusionValue: string, exclusionType: string) {
     <div
       v-if="
         authStore.scopes.includes('platforms.write') &&
-        config.CONFIG_FILE_WRITABLE
+          config.CONFIG_FILE_WRITABLE
       "
       class="mt-6"
     >
@@ -168,7 +168,7 @@ function removeExclusion(exclusionValue: string, exclusionType: string) {
           <v-btn
             v-if="
               authStore.scopes.includes('platforms.write') &&
-              config.CONFIG_FILE_WRITABLE
+                config.CONFIG_FILE_WRITABLE
             "
             prepend-icon="mdi-plus"
             variant="outlined"
@@ -196,7 +196,7 @@ function removeExclusion(exclusionValue: string, exclusionType: string) {
         <v-btn-group
           v-if="
             authStore.scopes.includes('platforms.write') &&
-            config.CONFIG_FILE_WRITABLE
+              config.CONFIG_FILE_WRITABLE
           "
           divided
           density="compact"

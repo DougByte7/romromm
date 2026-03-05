@@ -295,7 +295,9 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
             {{ t("common.dropzone-description") }}
           </p>
           <v-btn color="primary" variant="outlined" @click="triggerFileInput">
-            <v-icon start> mdi-plus </v-icon>
+            <v-icon start>
+              mdi-plus
+            </v-icon>
             {{ t("common.add") }}
           </v-btn>
         </div>
@@ -316,7 +318,9 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
               size="small"
               @click="triggerFileInput"
             >
-              <v-icon start> mdi-plus </v-icon>
+              <v-icon start>
+                mdi-plus
+              </v-icon>
               {{ t("common.add") }}
             </v-btn>
           </div>
@@ -351,7 +355,9 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
             </template>
             <template #item.actions="{ item }">
               <v-btn @click="removeRomFromList(item.name)">
-                <v-icon class="text-romm-red"> mdi-close </v-icon>
+                <v-icon class="text-romm-red">
+                  mdi-close
+                </v-icon>
               </v-btn>
             </template>
           </v-data-table-virtual>
@@ -365,7 +371,7 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
           class="opacity-0 pointer-events-none"
           style="display: none"
           @change="handleFileInputChange"
-        />
+        >
       </div>
     </template>
     <template #footer>

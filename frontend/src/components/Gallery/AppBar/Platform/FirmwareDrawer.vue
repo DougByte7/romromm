@@ -197,7 +197,9 @@ function deleteSelectedFirmware() {
             :tabindex="tabIndex"
             @click="emitter?.emit('showDeleteFirmwareDialog', [item])"
           >
-            <v-icon class="text-romm-red"> mdi-delete </v-icon>
+            <v-icon class="text-romm-red">
+              mdi-delete
+            </v-icon>
           </v-btn>
         </v-btn-group>
       </template>

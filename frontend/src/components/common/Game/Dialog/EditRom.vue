@@ -274,18 +274,22 @@ function handleRomUpdateFromMetadata(updatedRom: UpdateRom) {
                       })
                     "
                   >
-                    <v-icon size="large"> mdi-image-search-outline </v-icon>
+                    <v-icon size="large">
+                      mdi-image-search-outline
+                    </v-icon>
                   </v-btn>
                   <v-btn
                     size="small"
                     class="translucent text-white"
                     @click="triggerFileInput('cover-file-input')"
                   >
-                    <v-icon size="large"> mdi-pencil </v-icon>
+                    <v-icon size="large">
+                      mdi-pencil
+                    </v-icon>
                     <v-file-input
-                      hide-details
                       id="cover-file-input"
                       v-model="rom.artwork"
+                      hide-details
                       accept="image/*"
                       class="file-input"
                       @change="previewImage"
@@ -306,16 +310,16 @@ function handleRomUpdateFromMetadata(updatedRom: UpdateRom) {
           </v-col>
           <v-col class="pa-4">
             <v-text-field
-              hide-details
               v-model="rom.name"
+              hide-details
               :rules="[(value: string) => !!value || t('common.required')]"
               :label="t('common.name')"
               variant="outlined"
               class="my-4"
             />
             <v-text-field
-              hide-details
               v-model="rom.fs_name"
+              hide-details
               :rules="[(value: string) => !!value || t('common.required')]"
               :label="
                 rom.has_nested_single_file || rom.has_multiple_files
@@ -337,8 +341,8 @@ function handleRomUpdateFromMetadata(updatedRom: UpdateRom) {
               </template>
             </v-text-field>
             <v-textarea
-              hide-details
               v-model="rom.summary"
+              hide-details
               :label="t('rom.summary')"
               variant="outlined"
               class="my-4"
@@ -369,7 +373,9 @@ function handleRomUpdateFromMetadata(updatedRom: UpdateRom) {
                   size="small"
                   @click="triggerFileInput('manual-file-input')"
                 >
-                  <v-icon size="large"> mdi-cloud-upload-outline </v-icon>
+                  <v-icon size="large">
+                    mdi-cloud-upload-outline
+                  </v-icon>
                   <v-file-input
                     id="manual-file-input"
                     v-model="manualFiles"

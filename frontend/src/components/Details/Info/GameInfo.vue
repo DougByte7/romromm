@@ -290,15 +290,15 @@ function getFilterValues(path: string): string[] {
       <template
         v-if="
           rom.merged_screenshots.length > 0 ||
-          rom.youtube_video_id ||
-          rom.manual_metadata?.youtube_video_id
+            rom.youtube_video_id ||
+            rom.manual_metadata?.youtube_video_id
         "
       >
         <v-row no-gutters class="mt-4">
           <v-col>
             <MediaCarousel
-              enable-click
               v-model="carouselValue"
+              enable-click
               :rom="rom"
               @click="showDialog = true"
             />
@@ -331,14 +331,13 @@ function getFilterValues(path: string): string[] {
               </a>
               <span v-if="source.condition && index < dataSources.length - 1">
                 {{ index === dataSources.length - 2 ? " and " : ", " }}
-              </span> </template
-            >.
+              </span>
+            </template>.
           </div>
           <div v-if="rom.url_cover && coverImageSource" class="mt-1">
             Cover art provided by
             <a :href="rom.url_cover" target="_blank" style="color: inherit">
-              {{ coverImageSource }}</a
-            >.
+              {{ coverImageSource }}</a>.
           </div>
         </v-col>
       </v-row>

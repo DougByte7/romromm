@@ -97,7 +97,7 @@ async function updateCollection() {
             <template
               v-if="
                 currentSmartCollection.user_id === auth.user?.id &&
-                auth.scopes.includes('collections.write')
+                  auth.scopes.includes('collections.write')
               "
             >
               <v-btn
@@ -119,14 +119,18 @@ async function updateCollection() {
               </v-btn>
               <template v-else>
                 <v-btn size="small" class="bg-toplayer" @click="closeEditable">
-                  <v-icon color="romm-red"> mdi-close </v-icon>
+                  <v-icon color="romm-red">
+                    mdi-close
+                  </v-icon>
                 </v-btn>
                 <v-btn
                   size="small"
                   class="bg-toplayer ml-1"
                   @click="updateCollection"
                 >
-                  <v-icon color="romm-green"> mdi-check </v-icon>
+                  <v-icon color="romm-green">
+                    mdi-check
+                  </v-icon>
                 </v-btn>
               </template>
             </template>
@@ -162,8 +166,8 @@ async function updateCollection() {
                   currentSmartCollection.is_public
                     ? "mdi-lock-open"
                     : "mdi-lock"
-                }} </v-icon
-              >{{
+                }}
+              </v-icon>{{
                 currentSmartCollection.is_public
                   ? t("collection.public")
                   : t("collection.private")
@@ -214,14 +218,16 @@ async function updateCollection() {
             <template v-for="field in collectionInfoFields" :key="field.key">
               <div>
                 <v-chip size="small" class="mr-2 px-0" label>
-                  <v-chip label>{{ field.label }}</v-chip>
+                  <v-chip label>
+                    {{ field.label }}
+                  </v-chip>
                   <span class="px-2">{{
                     currentSmartCollection[
                       field.key as keyof typeof currentSmartCollection
                     ]?.toString()
                       ? currentSmartCollection[
-                          field.key as keyof typeof currentSmartCollection
-                        ]
+                        field.key as keyof typeof currentSmartCollection
+                      ]
                       : "N/A"
                   }}</span>
                 </v-chip>
@@ -241,7 +247,9 @@ async function updateCollection() {
             >
               <div>
                 <v-chip size="small" class="mr-2 px-0" label>
-                  <v-chip label> {{ filter[0] }} </v-chip>
+                  <v-chip label>
+                    {{ filter[0] }}
+                  </v-chip>
                   <span class="px-2">{{ filter[1] }}</span>
                 </v-chip>
               </div>
@@ -253,7 +261,7 @@ async function updateCollection() {
     <RSection
       v-if="
         auth.scopes.includes('collections.write') &&
-        currentSmartCollection.user_id === auth.user?.id
+          currentSmartCollection.user_id === auth.user?.id
       "
       icon="mdi-alert"
       icon-color="red"
@@ -275,7 +283,9 @@ async function updateCollection() {
               )
             "
           >
-            <v-icon class="text-romm-red mr-2"> mdi-delete </v-icon>
+            <v-icon class="text-romm-red mr-2">
+              mdi-delete
+            </v-icon>
             {{ t("collection.delete-collection") }}
           </v-btn>
         </div>

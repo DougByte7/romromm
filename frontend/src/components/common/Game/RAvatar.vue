@@ -47,8 +47,8 @@ const fallbackCoverImage = computed(() =>
 <template>
   <v-avatar variant="text" :width="size" rounded="0">
     <v-img
-      eager
       ref="game-image-ref"
+      eager
       :src="smallCover || fallbackCoverImage"
       :cover="!boxartStyleCover"
       :contain="boxartStyleCover"

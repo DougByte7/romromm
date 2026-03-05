@@ -63,7 +63,9 @@ const manualMetadata = computed(() => props.rom.manual_metadata || {});
 <template>
   <v-expansion-panel elevation="0">
     <v-expansion-panel-title class="bg-toplayer">
-      <v-icon class="mr-2"> mdi-text-box-plus </v-icon>
+      <v-icon class="mr-2">
+        mdi-text-box-plus
+      </v-icon>
       Additional Details
     </v-expansion-panel-title>
     <v-expansion-panel-text class="mt-4 px-2">

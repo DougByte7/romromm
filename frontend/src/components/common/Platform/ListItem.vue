@@ -27,8 +27,8 @@ const categoryIcon = computed(() =>
     v-bind="{
       ...(withLink
         ? {
-            to: { name: ROUTES.PLATFORM, params: { platform: platform.id } },
-          }
+          to: { name: ROUTES.PLATFORM, params: { platform: platform.id } },
+        }
         : {}),
     }"
     :value="platform.slug"
@@ -52,9 +52,11 @@ const categoryIcon = computed(() =>
     </v-row>
     <v-row no-gutters>
       <v-col>
-        <v-chip size="x-small" label class="text-grey">{{
-          platform.fs_slug
-        }}</v-chip>
+        <v-chip size="x-small" label class="text-grey">
+          {{
+            platform.fs_slug
+          }}
+        </v-chip>
         <v-icon
           :icon="categoryIcon"
           class="ml-2 text-caption text-grey"

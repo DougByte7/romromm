@@ -460,7 +460,7 @@ onUnmounted(() => {
       class="select-none"
       draggable="false"
       style="height: 100vh; max-height: 100%; width: auto; object-fit: cover"
-    />
+    >
   </div>
 </template>
 

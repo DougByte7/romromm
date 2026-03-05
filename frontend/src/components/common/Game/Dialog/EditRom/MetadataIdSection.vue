@@ -20,7 +20,9 @@ const parseIdValue = (value: string): number | null => {
 <template>
   <v-expansion-panel elevation="0">
     <v-expansion-panel-title class="bg-toplayer">
-      <v-icon class="mr-2">mdi-database</v-icon>
+      <v-icon class="mr-2">
+        mdi-database
+      </v-icon>
       Metadata IDs
     </v-expansion-panel-title>
     <v-expansion-panel-text class="mt-4 px-2">

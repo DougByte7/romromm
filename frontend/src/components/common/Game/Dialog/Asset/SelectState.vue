@@ -70,7 +70,9 @@ function closeDialog() {
         </v-col>
       </v-row>
       <div v-else class="text-center mt-6">
-        <v-icon size="x-large"> mdi-help-rhombus-outline </v-icon>
+        <v-icon size="x-large">
+          mdi-help-rhombus-outline
+        </v-icon>
         <p class="text-h4 mt-2">
           {{ t("rom.no-states-found") }}
         </p>

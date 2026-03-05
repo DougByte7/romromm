@@ -139,7 +139,9 @@ function closeDialog() {
           <template #item.actions="{ item }">
             <v-btn-group divided density="compact">
               <v-btn @click="removeFileFromFileInput(item.name)">
-                <v-icon class="text-romm-red"> mdi-close </v-icon>
+                <v-icon class="text-romm-red">
+                  mdi-close
+                </v-icon>
               </v-btn>
             </v-btn-group>
           </template>

@@ -51,8 +51,7 @@ onMounted(async () => {
         class="tooltip"
         transition="fade-transition"
         open-delay="1000"
-        >{{ game.name }}</v-tooltip
-      >
+      >{{ game.name }}</v-tooltip>
       <v-img
         v-bind="props"
         :src="game.cover_url || missingCoverImage"

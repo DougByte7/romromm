@@ -535,7 +535,7 @@ onUnmounted(() => {
             :lazy-src="smallCover || fallbackCoverImage"
             :alt="`${rom.name} background`"
             class="w-full h-full object-cover blur-xl brightness-75 saturate-[1.25] contrast-110 scale-110"
-          />
+          >
         </div>
         <div
           class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/80 pointer-events-none z-0"
@@ -577,7 +577,7 @@ onUnmounted(() => {
                   >
                     {{
                       rom.platform_display_name ||
-                      (rom.platform_slug || "RETRO")?.toString().toUpperCase()
+                        (rom.platform_slug || "RETRO")?.toString().toUpperCase()
                     }}
                   </span>
                   <span
@@ -706,7 +706,7 @@ onUnmounted(() => {
                           class="w-full h-full object-cover select-none pointer-events-none"
                           draggable="false"
                           loading="lazy"
-                        />
+                        >
                         <div
                           class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-black/0 px-2 pt-4 pb-1 text-[10px] text-white/80 tracking-wide flex justify-between items-end"
                         >

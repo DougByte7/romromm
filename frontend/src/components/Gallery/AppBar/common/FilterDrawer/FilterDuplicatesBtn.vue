@@ -64,8 +64,10 @@ function setState(state: string | null) {
       :disabled="fetchTotalRoms > 10000"
       @update:model-value="setState"
     >
-      <v-btn value="all" size="small"
-        ><v-icon size="x-large">mdi-cancel</v-icon>
+      <v-btn value="all" size="small">
+        <v-icon size="x-large">
+          mdi-cancel
+        </v-icon>
       </v-btn>
       <v-tooltip
         :text="t('platform.show-duplicates-only')"
@@ -79,7 +81,9 @@ function setState(state: string | null) {
             v-bind="props"
             :disabled="fetchTotalRoms > 10000"
           >
-            <v-icon size="x-large">mdi-card-multiple</v-icon>
+            <v-icon size="x-large">
+              mdi-card-multiple
+            </v-icon>
           </v-btn>
         </template>
       </v-tooltip>
@@ -95,7 +99,9 @@ function setState(state: string | null) {
             v-bind="props"
             :disabled="fetchTotalRoms > 10000"
           >
-            <v-icon size="x-large">mdi-card-outline</v-icon>
+            <v-icon size="x-large">
+              mdi-card-outline
+            </v-icon>
           </v-btn>
         </template>
       </v-tooltip>

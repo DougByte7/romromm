@@ -279,7 +279,9 @@ async function createSmartCollection() {
             <v-col class="filters-preview">
               <v-card variant="outlined" class="h-100">
                 <v-card-title class="text-subtitle-1">
-                  <v-icon class="mr-2"> mdi-filter </v-icon>
+                  <v-icon class="mr-2">
+                    mdi-filter
+                  </v-icon>
                   {{ t("collection.current-filters") }}
                 </v-card-title>
                 <v-card-text>

@@ -182,8 +182,7 @@ watch(
                 hide-details
               >
                 <template #label>
-                  <span>{{ t("rom.backlogged") }}</span
-                  ><span class="ml-2">{{
+                  <span>{{ t("rom.backlogged") }}</span><span class="ml-2">{{
                     getEmojiForStatus("backlogged")
                   }}</span>
                 </template>
@@ -195,8 +194,7 @@ watch(
                 hide-details
               >
                 <template #label>
-                  <span>{{ t("rom.now-playing") }}</span
-                  ><span class="ml-2">{{
+                  <span>{{ t("rom.now-playing") }}</span><span class="ml-2">{{
                     getEmojiForStatus("now_playing")
                   }}</span>
                 </template>
@@ -208,8 +206,7 @@ watch(
                 hide-details
               >
                 <template #label>
-                  <span>{{ t("rom.hidden") }}</span
-                  ><span class="ml-2">{{ getEmojiForStatus("hidden") }}</span>
+                  <span>{{ t("rom.hidden") }}</span><span class="ml-2">{{ getEmojiForStatus("hidden") }}</span>
                 </template>
               </v-checkbox>
             </v-col>
@@ -302,8 +299,7 @@ watch(
                   <template #selection="{ item }">
                     <span>{{
                       getEmojiForStatus(item.raw as RomUserStatus)
-                    }}</span
-                    ><span class="ml-2">{{
+                    }}</span><span class="ml-2">{{
                       t(getI18nKeyForStatus(item.raw as RomUserStatus) || "")
                     }}</span>
                   </template>
@@ -311,8 +307,7 @@ watch(
                     <v-list-item link @click="onStatusItemClick(item.raw)">
                       <span>{{
                         getEmojiForStatus(item.raw as RomUserStatus)
-                      }}</span
-                      ><span class="ml-2">{{
+                      }}</span><span class="ml-2">{{
                         t(getI18nKeyForStatus(item.raw as RomUserStatus) || "")
                       }}</span>
                     </v-list-item>

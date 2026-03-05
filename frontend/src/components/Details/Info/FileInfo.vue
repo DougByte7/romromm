@@ -122,7 +122,9 @@ watch(
                 class="mt-1 mr-2 px-0"
                 label
               >
-                <v-chip label> {{ info.label }} </v-chip>
+                <v-chip label>
+                  {{ info.label }}
+                </v-chip>
                 <span class="px-2">{{ info.value }}</span>
               </v-chip>
             </v-col>

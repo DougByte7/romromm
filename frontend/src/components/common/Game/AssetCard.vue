@@ -87,7 +87,7 @@ function handleDelete(event: Event) {
               rounded
               :src="
                 asset.screenshot?.download_path ??
-                getEmptyCoverImage(asset.file_name, 16 / 9)
+                  getEmptyCoverImage(asset.file_name, 16 / 9)
               "
               :aspect-ratio="16 / 9"
             />
@@ -123,9 +123,7 @@ function handleDelete(event: Event) {
           </v-col>
           <v-col cols="12">
             <div class="mt-1">
-              <span class="text-grey text-caption"
-                >({{ formatRelativeDate(asset.updated_at) }})</span
-              >
+              <span class="text-grey text-caption">({{ formatRelativeDate(asset.updated_at) }})</span>
             </div>
           </v-col>
         </v-row>
@@ -147,7 +145,9 @@ function handleDelete(event: Event) {
               size="small"
               @click="handleDelete"
             >
-              <v-icon class="text-romm-red">mdi-delete</v-icon>
+              <v-icon class="text-romm-red">
+                mdi-delete
+              </v-icon>
             </v-btn>
           </v-btn-group>
         </v-slide-x-transition>

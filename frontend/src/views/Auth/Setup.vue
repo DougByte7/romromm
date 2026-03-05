@@ -536,7 +536,7 @@ onMounted(() => {
                       <p class="text-caption text-grey">
                         {{
                           libraryInfo?.detected_structure === "struct_a" ||
-                          !libraryInfo?.detected_structure
+                            !libraryInfo?.detected_structure
                             ? "roms/{platform}"
                             : "{platform}/roms"
                         }}
@@ -594,8 +594,8 @@ onMounted(() => {
                           <v-chip
                             variant="tonal"
                             color="primary"
-                            @click="selectAll = !selectAll"
                             label
+                            @click="selectAll = !selectAll"
                           >
                             {{
                               selectAll
@@ -603,14 +603,14 @@ onMounted(() => {
                                 : t("setup.select-all")
                             }}
                           </v-chip>
-                          <v-chip class="ml-2" label
-                            >{{ selectedAvailableCount }}
-                            {{ t("setup.selected") }}</v-chip
-                          >
+                          <v-chip class="ml-2" label>
+                            {{ selectedAvailableCount }}
+                            {{ t("setup.selected") }}
+                          </v-chip>
                         </div>
                         <PlatformGroupList
-                          :grouped-platforms="groupedAvailablePlatforms"
                           v-model:selected-platforms="selectedPlatforms"
+                          :grouped-platforms="groupedAvailablePlatforms"
                           :show-checkboxes="true"
                           key-prefix="available"
                           :base-index="groupedExistingPlatforms.length"
@@ -667,8 +667,8 @@ onMounted(() => {
                             <v-chip
                               variant="tonal"
                               color="primary"
-                              @click="selectAll = !selectAll"
                               label
+                              @click="selectAll = !selectAll"
                             >
                               {{
                                 selectAll
@@ -676,14 +676,14 @@ onMounted(() => {
                                   : t("setup.select-all")
                               }}
                             </v-chip>
-                            <v-chip class="ml-2" label
-                              >{{ selectedAvailableCount }}
-                              {{ t("setup.selected") }}</v-chip
-                            >
+                            <v-chip class="ml-2" label>
+                              {{ selectedAvailableCount }}
+                              {{ t("setup.selected") }}
+                            </v-chip>
                           </div>
                           <PlatformGroupList
-                            :grouped-platforms="groupedAvailablePlatforms"
                             v-model:selected-platforms="selectedPlatforms"
+                            :grouped-platforms="groupedAvailablePlatforms"
                             :show-checkboxes="true"
                             key-prefix="available-mobile"
                             :base-index="groupedExistingPlatforms.length"

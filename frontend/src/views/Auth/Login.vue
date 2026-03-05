@@ -185,7 +185,9 @@ onMounted(async () => {
                       .replace(/ /g, '-')}.png`"
                   >
                     <template #error>
-                      <v-icon size="20"> mdi-key </v-icon>
+                      <v-icon size="20">
+                        mdi-key
+                      </v-icon>
                     </template>
                   </v-img>
                 </v-icon>
