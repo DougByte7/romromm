@@ -147,7 +147,7 @@ OIDC_USERNAME_ATTRIBUTE: Final[str] = _get_env(
 
 # SCANS
 SCAN_TIMEOUT: Final[int] = safe_int(_get_env("SCAN_TIMEOUT"), 60 * 60 * 4)  # 4 hours
-SCAN_WORKERS: Final[int] = max(1, safe_int(_get_env("SCAN_WORKERS"), 1))
+SCAN_WORKERS: Final[int] = max(1, safe_int(_get_env("SCAN_WORKERS"), 4))
 ASSET_WORKERS: Final[int] = max(1, safe_int(_get_env("ASSET_WORKERS"), 4))
 
 # TASKS
